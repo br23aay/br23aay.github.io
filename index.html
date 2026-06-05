@@ -793,19 +793,221 @@
     animation: pulse 2s infinite;
   }
 
-  /* ---- RESPONSIVE ---- */
+  /* ============================================================
+     RESPONSIVE — FULL MOBILE SUPPORT
+  ============================================================ */
+
+  /* Hamburger button */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    background: none;
+    border: none;
+    z-index: 200;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile nav drawer */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(8,12,16,0.97);
+    backdrop-filter: blur(20px);
+    z-index: 150;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+  }
+  .mobile-nav.open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mobile-nav a {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+  }
+  .mobile-nav a:hover { color: var(--accent); }
+  .mobile-nav .mob-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 12px 28px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 3px;
+    margin-top: 1rem;
+  }
+
+  /* ---- TABLET (max 1024px) ---- */
+  @media (max-width: 1024px) {
+    .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ---- MOBILE (max 768px) ---- */
   @media (max-width: 768px) {
+
+    /* Nav */
     .nav-links { display: none; }
-    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .contact-grid { grid-template-columns: 1fr; }
+    .nav-cta { display: none; }
+    .hamburger { display: flex; }
+
+    /* Container padding */
+    .container { padding: 0 1.25rem; }
+
+    /* Hero */
+    #home { padding: 6rem 0 3rem; min-height: auto; }
+    #home > .container > div:first-child {
+      flex-direction: column-reverse !important;
+      align-items: center !important;
+      text-align: center;
+      gap: 1.5rem !important;
+    }
+    .hero-name { font-size: 2.8rem; text-align: center; }
+    .hero-title { font-size: 12px; text-align: center; }
+    .hero-desc { font-size: 14px; text-align: center; margin: 0 auto 1.5rem; }
+    .hero-badge { font-size: 10px; justify-content: center; }
+    .avail-bar { justify-content: center; }
+    .hero-actions {
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-actions a { width: 100%; text-align: center; }
+    .hero-stats {
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .hero-stats > div { min-width: 80px; text-align: center; }
+    .hero-stat-val { font-size: 22px; }
+
+    /* Hero photo */
+    #home > .container > div:first-child > div:last-child > div {
+      width: 160px !important;
+      height: 160px !important;
+    }
+
+    /* Section headers */
+    .section { padding: 3rem 0; }
+    .section-title { font-size: 1.8rem; }
+    .section-sub { font-size: 14px; }
+
+    /* About */
+    .about-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .about-text p { font-size: 14px; }
+    .about-cards > div:first-child { justify-content: center; }
+
+    /* Paper banner */
+    .paper-banner {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+    .paper-title { font-size: 13px; }
+    .paper-btn { width: 100%; text-align: center; }
+
+    /* Research metrics */
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .metric-val { font-size: 1.4rem; }
+
+    /* Projects */
+    .projects-grid { grid-template-columns: 1fr; gap: 12px; }
+    .project-card { padding: 1.25rem; }
+
+    /* Skills */
+    .skills-grid { grid-template-columns: 1fr; gap: 10px; }
+
+    /* Cert banner */
+    .cert-banner {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .cert-number { font-size: 3rem; }
+    .cert-topics { justify-content: center; }
+
+    /* Timeline */
+    .timeline-item {
+      grid-template-columns: 70px 1fr;
+      gap: 0.75rem;
+    }
+    .timeline-item::after { left: 69px; }
+    .timeline-dot { left: 62px; width: 12px; height: 12px; }
+    .timeline-date { font-size: 10px; }
+    .timeline-role { font-size: 14px; }
+    .timeline-company { font-size: 11px; }
+    .timeline-desc { font-size: 12px; }
+    .timeline-content { padding: 1rem; }
+
+    /* Contact */
+    .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
     .form-row { grid-template-columns: 1fr; }
-    .timeline-item { grid-template-columns: 80px 1fr; gap: 1rem; }
-    .timeline-item::after { left: 79px; }
-    .timeline-dot { left: 72px; }
-    .hero-stats { gap: 1.5rem; }
-    .cert-banner { flex-direction: column; gap: 1rem; }
+    .contact-info h3 { font-size: 1.4rem; }
+
+    /* Footer */
+    footer .inner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1rem;
+    }
+    .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+
+    /* Cert banner number */
+    .cert-detail h3 { font-size: 16px; }
+    .cert-detail p { font-size: 13px; }
+  }
+
+  /* ---- SMALL MOBILE (max 480px) ---- */
+  @media (max-width: 480px) {
+    .hero-name { font-size: 2.2rem; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats { gap: 0.75rem; }
+    .hero-stat-val { font-size: 20px; }
+    .hero-stat-lbl { font-size: 9px; }
+    .section-title { font-size: 1.6rem; }
+    .about-card-val { font-size: 13px; }
+    .timeline-item { grid-template-columns: 60px 1fr; }
+    .timeline-item::after { left: 59px; }
+    .timeline-dot { left: 52px; }
   }
 </style>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about" onclick="closeMobileNav()">About</a>
+  <a href="#research" onclick="closeMobileNav()">Research</a>
+  <a href="#projects" onclick="closeMobileNav()">Projects</a>
+  <a href="#skills" onclick="closeMobileNav()">Skills</a>
+  <a href="#experience" onclick="closeMobileNav()">Experience</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <a href="https://br23aay.github.io/Bharadwaj_Rachuri_CV.pdf" target="_blank" class="mob-cta" onclick="closeMobileNav()">Download CV</a>
+</div>
 </head>
 <body>
 
@@ -821,6 +1023,9 @@
       <li><a href="#contact">contact</a></li>
     </ul>
     <a href="mailto:bharadwaj.r.career@gmail.com" class="nav-cta">get in touch →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -1512,6 +1717,32 @@
   }
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
+
+  // ── MOBILE NAV ──────────────────────────────────────────────────────────
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const ham = document.getElementById('hamburger');
+    const isOpen = nav.classList.contains('open');
+    if (isOpen) {
+      nav.classList.remove('open');
+      ham.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => { nav.style.display = 'none'; }, 300);
+    } else {
+      nav.style.display = 'flex';
+      setTimeout(() => nav.classList.add('open'), 10);
+      ham.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const ham = document.getElementById('hamburger');
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => { nav.style.display = 'none'; }, 300);
+  }
 
   window.addEventListener('scroll', () => {
     let current = '';
