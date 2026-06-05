@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bharadwaj Rachuri — Machine Learning & AI Engineer</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F2FKEY97EV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-F2FKEY97EV');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
@@ -1064,9 +1073,9 @@
     </p>
 
     <div class="hero-actions">
-      <a href="#research" class="btn-primary">View Research →</a>
-      <a href="https://github.com/br23aay" target="_blank" class="btn-secondary">GitHub Profile</a>
-      <a href="https://br23aay.github.io/Bharadwaj_Rachuri_CV.pdf" target="_blank" download="Bharadwaj_Rachuri_CV.pdf" class="btn-secondary">Download CV</a>
+      <a href="#research" class="btn-primary" onclick="gtag('event','click',{event_category:'Hero',event_label:'View Research'})">View Research →</a>
+      <a href="https://github.com/br23aay" target="_blank" class="btn-secondary" onclick="gtag('event','click',{event_category:'Hero',event_label:'GitHub Profile'})">GitHub Profile</a>
+      <a href="https://br23aay.github.io/Bharadwaj_Rachuri_CV.pdf" target="_blank" download="Bharadwaj_Rachuri_CV.pdf" class="btn-secondary" onclick="gtag('event','click',{event_category:'Hero',event_label:'Download CV'})">Download CV</a>
     </div>
 
     <div class="hero-stats">
@@ -1126,7 +1135,7 @@
           Impact Factor: <span class="if">7.52</span>
         </div>
       </div>
-      <a href="https://ijres.org/papers/Volume-13/Issue-6/1306164183.pdf" target="_blank" class="paper-btn">Read Paper →</a>
+      <a href="https://ijres.org/papers/Volume-13/Issue-6/1306164183.pdf" target="_blank" class="paper-btn" onclick="gtag('event','click',{event_category:'Research',event_label:'Read Paper'})">Read Paper →</a>
     </div>
   </div>
 </section>
@@ -1703,6 +1712,7 @@
       });
 
       if (res.ok) {
+        gtag('event', 'form_submit', {event_category:'Contact', event_label:'Message Sent'});
         form.style.display = 'none';
         success.style.display = 'block';
       } else {
