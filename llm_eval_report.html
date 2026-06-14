@@ -291,7 +291,118 @@
 </table>
 
 <footer>
-  LLM Evaluation Workflow · Azure AI Foundry Research ·
-  <a href="https://github.com/br23aay">github.com/br23aay</a>
+  LLM Evaluation Workflow · Built by
+  <a href="https://br23aay.github.io">Bharadwaj Rachuri</a> ·
+  <a href="https://github.com/br23aay/llm-evaluation-workflows" target="_blank">github.com/br23aay/llm-evaluation-workflows</a>
 </footer>
+
+<!-- GOOGLE ANALYTICS -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F2FKEY97EV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-F2FKEY97EV');</script>
+
+<style>
+  .scroll-prog{position:fixed;top:0;left:0;height:2px;z-index:9999;background:linear-gradient(90deg,#00e5ff,#9c5fff);width:0%;transition:width 0.1s ease;pointer-events:none;}
+  .back-float{position:fixed;bottom:1.5rem;right:1.5rem;z-index:500;font-family:-apple-system,sans-serif;font-size:12px;padding:8px 16px;background:rgba(13,15,26,0.92);border:1px solid rgba(0,229,255,0.3);border-radius:20px;color:#00e5ff;text-decoration:none;backdrop-filter:blur(10px);transition:all 0.2s;}
+  .back-float:hover{background:rgba(0,229,255,0.1);box-shadow:0 0 20px rgba(0,229,255,0.2);}
+  .top-nav{background:#131627;border-bottom:1px solid #1e2540;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:54px;position:sticky;top:0;z-index:100;animation:slideDown 0.5s ease both;}
+  @keyframes slideDown{from{transform:translateY(-60px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .top-nav-logo{font-size:14px;font-weight:700;color:#00e5ff;letter-spacing:1px;text-decoration:none;}
+  .top-nav-logo span{color:#9c5fff;}
+  .nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .nbadge{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid;}
+  .back-nav{font-size:11px;padding:4px 14px;border:1px solid rgba(255,255,255,0.12);border-radius:20px;color:#6b7aab;text-decoration:none;transition:all 0.2s;}
+  .back-nav:hover{border-color:#00e5ff;color:#00e5ff;}
+  h1{animation:fadeUp 0.6s ease both;}
+  .sub{animation:fadeUp 0.6s 0.1s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .kpi{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease;}
+  .kpi.vis{opacity:1;transform:translateY(0);}
+  .kpi:hover{transform:translateY(-4px)!important;box-shadow:0 8px 30px rgba(0,0,0,0.4)!important;}
+  tbody tr{opacity:0;transform:translateX(-12px);transition:opacity 0.35s ease,transform 0.35s ease,background 0.15s;}
+  tbody tr.vis{opacity:1;transform:translateX(0);}
+  .status-badge{transition:all 0.2s ease;cursor:default;}
+  .status-badge:hover{transform:scale(1.12);box-shadow:0 0 12px currentColor;}
+  .particle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:floatUp linear infinite;opacity:0;}
+  @keyframes floatUp{0%{transform:translateY(100vh);opacity:0;}10%{opacity:0.5;}90%{opacity:0.2;}100%{transform:translateY(-100px);opacity:0;}}
+</style>
+
+<div class="scroll-prog" id="sp"></div>
+<nav class="top-nav" id="topNav">
+  <a href="https://br23aay.github.io" class="top-nav-logo">LLM<span>Eval</span> · Evaluation Report</a>
+  <div class="nav-right">
+    <span class="nbadge" style="border-color:#00e5ff;color:#00e5ff">20 Outputs</span>
+    <span class="nbadge" style="border-color:#00e676;color:#00e676">14 PASS · 6 WARN</span>
+    <span class="nbadge" style="border-color:#9c5fff;color:#9c5fff">Avg 0.847</span>
+    <a href="https://br23aay.github.io" class="back-nav">← Portfolio</a>
+  </div>
+</nav>
+<a href="https://br23aay.github.io" class="back-float">← Portfolio</a>
+
+<script>
+// Move nav to top
+const nav = document.getElementById('topNav');
+document.body.insertBefore(nav, document.body.firstChild);
+
+// Scroll progress
+window.addEventListener('scroll', () => {
+  document.getElementById('sp').style.width =
+    (scrollY / (document.documentElement.scrollHeight - innerHeight) * 100) + '%';
+});
+
+// KPI counters + entrance
+const kpiObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.kpi').forEach((k, i) => {
+      setTimeout(() => {
+        k.classList.add('vis');
+        const val = k.querySelector('.kpi-val');
+        if (!val) return;
+        const n = parseInt(val.textContent);
+        if (!isNaN(n) && n > 0) {
+          let s = null;
+          const step = ts => {
+            if (!s) s = ts;
+            const p = Math.min((ts-s)/1200, 1);
+            val.textContent = Math.floor((1-Math.pow(1-p,3))*n);
+            if (p < 1) requestAnimationFrame(step);
+            else val.textContent = n;
+          };
+          requestAnimationFrame(step);
+        }
+      }, i * 110);
+    });
+    kpiObs.unobserve(entry.target);
+  });
+}, { threshold: 0.3 });
+const kpiRow = document.querySelector('.kpi-row');
+if (kpiRow) kpiObs.observe(kpiRow);
+
+// Table row slide-in
+const rows = document.querySelectorAll('tbody tr');
+const rowObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    rows.forEach((r, i) => setTimeout(() => r.classList.add('vis'), i * 40));
+    rowObs.unobserve(entry.target);
+  });
+}, { threshold: 0.05 });
+const tbody = document.querySelector('tbody');
+if (tbody) rowObs.observe(tbody);
+
+// Row hover
+rows.forEach(r => {
+  r.addEventListener('mouseenter', () => { r.style.background='rgba(0,229,255,0.03)'; r.style.transform='translateX(4px)'; });
+  r.addEventListener('mouseleave', () => { r.style.background=''; r.style.transform=''; });
+});
+
+// Floating particles
+for (let i = 0; i < 10; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const sz = Math.random()*3+1;
+  p.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${Math.random()>.5?'#00e5ff':'#9c5fff'};animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*5}s;`;
+  document.body.appendChild(p);
+}
+</script>
 </body></html>
