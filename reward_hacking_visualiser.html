@@ -695,7 +695,7 @@ const gridOpts = {
 
 const baseOpts = {
   responsive: true,
-  animation: false,
+  animation: { duration: 1200, easing: 'easeInOutQuart' },
   plugins: {
     legend: { labels: { boxWidth: 10, padding: 12, font: {size:11} } },
     tooltip: { backgroundColor: '#131627', borderColor: '#1e2540', borderWidth: 1, titleFont:{size:11}, bodyFont:{size:11} },
@@ -897,25 +897,196 @@ new Chart(document.getElementById('seedChart'), {
 });
 
 // ─── PHASE FILTER ───
-const allCharts = Chart.instances;
-
 function setPhase(phase, btn) {
-  // Update button styles
-  document.querySelectorAll('.phase-btn').forEach(b => {
-    b.className = 'phase-btn';
-  });
+  document.querySelectorAll('.phase-btn').forEach(b => { b.className = 'phase-btn'; });
   btn.className = `phase-btn active-${phase}`;
-  // In a full Streamlit app this would filter the data;
-  // here we highlight the label for demo
   const labels = {
-    all: 'ALL PHASES — Full training run (Episodes 1–92)',
+    all:    'ALL PHASES — Full training run (Episodes 1–92)',
     phase1: 'PHASE 1 — Grasp training (Episodes 1–32) · Reward hacking zone',
     phase2: 'PHASE 2 — Rotate training (Episodes 33–64) · Policy improvement',
     phase3: 'PHASE 3 — Hold training (Episodes 65–92) · Peak reward 18,007',
   };
   document.querySelector('.page-sub').textContent =
     labels[phase] + ' · Bharadwaj Rachuri & Dr Diego Resende Faria · University of Hertfordshire, UK';
+  if(typeof gtag !== 'undefined') gtag('event','phase_filter',{event_category:'Visualiser',event_label:phase});
 }
+</script>
+
+<!-- ── GOOGLE ANALYTICS ── -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F2FKEY97EV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-F2FKEY97EV');</script>
+
+<!-- ── ANIMATION LAYER ── -->
+<style>
+  /* Scroll progress bar */
+  .scroll-prog { position:fixed; top:0; left:0; height:2px; z-index:9999; background:linear-gradient(90deg,#00e5ff,#9c5fff); transition:width 0.1s ease; width:0%; pointer-events:none; }
+
+  /* Back button */
+  .back-btn-float { position:fixed; bottom:1.5rem; right:1.5rem; z-index:500; font-family:'DM Mono','Courier New',monospace; font-size:12px; padding:8px 16px; background:rgba(13,15,26,0.9); border:1px solid rgba(0,229,255,0.3); border-radius:20px; color:#00e5ff; text-decoration:none; backdrop-filter:blur(10px); transition:all 0.2s; }
+  .back-btn-float:hover { background:rgba(0,229,255,0.1); border-color:#00e5ff; box-shadow:0 0 20px rgba(0,229,255,0.2); }
+
+  /* KPI card entrance */
+  .kpi-card { opacity:0; transform:translateY(20px); transition:opacity 0.5s ease, transform 0.5s ease; }
+  .kpi-card.visible { opacity:1; transform:translateY(0); }
+  .kpi-card:hover { transform:translateY(-4px) !important; box-shadow:0 8px 30px rgba(0,0,0,0.4); }
+
+  /* Chart card entrance */
+  .chart-card { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .chart-card.visible { opacity:1; transform:translateY(0); }
+  .chart-card:hover { border-color:rgba(0,229,255,0.2) !important; }
+
+  /* Phase card entrance */
+  .phase-card { opacity:0; transform:translateX(-20px); transition:opacity 0.5s ease, transform 0.5s ease; }
+  .phase-card.visible { opacity:1; transform:translateX(0); }
+
+  /* Hack alert pulse */
+  .hack-alert { animation:hackPulse 3s infinite; }
+  @keyframes hackPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,23,68,0);} 50%{box-shadow:0 0 0 6px rgba(255,23,68,0.08);} }
+
+  /* Floating particles */
+  .particle { position:fixed; border-radius:50%; pointer-events:none; z-index:0; animation:floatUp linear infinite; opacity:0; }
+  @keyframes floatUp { 0%{transform:translateY(100vh) scale(0);opacity:0;} 10%{opacity:0.6;} 90%{opacity:0.3;} 100%{transform:translateY(-100px) scale(1);opacity:0;} }
+
+  /* Page title fade in */
+  .page-title { animation:fadeInDown 0.7s ease both; }
+  .page-sub { animation:fadeInDown 0.7s 0.15s ease both; }
+  .filters { animation:fadeInDown 0.7s 0.25s ease both; }
+  @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px);} to{opacity:1;transform:translateY(0);} }
+
+  /* Chart card 3D tilt */
+  .chart-card { transform-style:preserve-3d; }
+</style>
+
+<div class="scroll-prog" id="scrollProg"></div>
+<a href="https://br23aay.github.io" class="back-btn-float">← Portfolio</a>
+
+<script>
+// ── SCROLL PROGRESS ──
+window.addEventListener('scroll', () => {
+  const pct = (scrollY / (document.documentElement.scrollHeight - innerHeight)) * 100;
+  document.getElementById('scrollProg').style.width = pct + '%';
+});
+
+// ── INTERSECTION OBSERVER — entrance animations ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+// Stagger KPI cards
+document.querySelectorAll('.kpi-card').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.1) + 's';
+  observer.observe(el);
+});
+
+// Chart cards
+document.querySelectorAll('.chart-card').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.08) + 's';
+  observer.observe(el);
+});
+
+// Phase cards
+document.querySelectorAll('.phase-card').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.12) + 's';
+  observer.observe(el);
+});
+
+// ── KPI COUNTER ANIMATION ──
+function animateCounter(el, target, suffix, decimals) {
+  let start = null;
+  const step = (ts) => {
+    if (!start) start = ts;
+    const p = Math.min((ts - start) / 1600, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    const val = decimals ? (e * target).toFixed(decimals) : Math.floor(e * target).toLocaleString();
+    el.textContent = val + (suffix || '');
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+const kpiObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const kpis = entry.target.querySelectorAll('.kpi-val');
+      kpis.forEach(el => {
+        const text = el.textContent;
+        if (text === '18,007') animateCounter(el, 18007, '', 0);
+        else if (text === '175°') { let s=null; const step=(ts)=>{if(!s)s=ts;const p=Math.min((ts-s)/1400,1);const e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*175)+'°';if(p<1)requestAnimationFrame(step);}; requestAnimationFrame(step); }
+        else if (text === '>90%') { setTimeout(()=>{ el.style.transform='scale(1.1)'; setTimeout(()=>el.style.transform='',300); },800); }
+        else if (text === '73.7K') animateCounter(el, 73700, '', 0);
+      });
+      kpiObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+const kpiRow = document.querySelector('.kpi-row');
+if (kpiRow) kpiObs.observe(kpiRow);
+
+// ── 3D CARD TILT ──
+document.querySelectorAll('.chart-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-2px)`;
+    card.style.transition = 'transform 0.05s ease';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform 0.4s ease, opacity 0.6s ease, border-color 0.2s';
+  });
+});
+
+// ── FLOATING PARTICLES ──
+const body = document.body;
+for (let i = 0; i < 12; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 3 + 1;
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    background:${Math.random()>0.5?'#00e5ff':'#9c5fff'};
+    animation-duration:${Math.random()*12+8}s;
+    animation-delay:${Math.random()*6}s;
+  `;
+  body.appendChild(p);
+}
+
+// ── METRICS TABLE ROW ANIMATION ──
+const tableRows = document.querySelectorAll('.metrics-table tbody tr');
+const tableObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tableRows.forEach((row, i) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(-20px)';
+        setTimeout(() => {
+          row.style.transition = 'all 0.4s ease';
+          row.style.opacity = '1';
+          row.style.transform = 'translateX(0)';
+        }, i * 60);
+      });
+      tableObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+const metricsTable = document.querySelector('.metrics-table');
+if (metricsTable) tableObs.observe(metricsTable);
+
+// ── BADGE GLOW on hover in header ──
+document.querySelectorAll('.badge').forEach(b => {
+  b.style.transition = 'all 0.2s ease';
+  b.addEventListener('mouseenter', () => { b.style.boxShadow = '0 0 12px currentColor'; b.style.transform = 'scale(1.05)'; });
+  b.addEventListener('mouseleave', () => { b.style.boxShadow = ''; b.style.transform = ''; });
+});
 </script>
 </body>
 </html>
