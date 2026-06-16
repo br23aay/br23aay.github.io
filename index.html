@@ -430,7 +430,7 @@
   /* ---- PROJECTS ---- */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
     margin-top: 3rem;
   }
@@ -1322,76 +1322,87 @@
 
     <div class="projects-grid">
 
-      <!-- PROJECT 1 — Shadow Hand Visualiser — click triggers modal -->
+      <!-- Shadow Hand Visualiser — LIVE -->
       <div class="project-card featured reveal" onclick="openModal('shadowhand')" style="cursor:pointer;">
-        <div class="project-top">
-          <div class="project-icon">🦾</div>
-          <span class="project-badge badge-pub">LIVE TOOL</span>
-        </div>
+        <div class="project-top"><div class="project-icon">🦾</div><span class="project-badge badge-pub">LIVE TOOL</span></div>
         <div class="project-title">Shadow Hand Reward Hacking Visualiser</div>
-        <div class="project-desc">Interactive dashboard built on published Shadow Hand PPO research. Explore reward hacking emergence, phase-based reward comparison, touch sensor accuracy across all 5 fingers, KL divergence, and seed reproducibility.</div>
-        <div class="project-result">→ 7 interactive charts · 92 training episodes · Published IJRES IF 7.52</div>
-        <div class="project-tags">
-          <span class="project-tag">PPO</span>
-          <span class="project-tag">MuJoCo</span>
-          <span class="project-tag">Chart.js</span>
-          <span class="project-tag">Reward Hacking</span>
-          <span class="project-tag">AI Safety</span>
-        </div>
+        <div class="project-desc">Interactive dashboard on published PPO research. Explore reward hacking emergence, phase-based reward comparison, touch sensor accuracy across all 5 fingers, KL divergence, and seed reproducibility — all from the IJRES paper.</div>
+        <div class="project-result">→ 7 interactive charts · 92 training episodes · IJRES IF 7.52</div>
+        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Chart.js</span><span class="project-tag">Reward Hacking</span><span class="project-tag">AI Safety</span></div>
         <div class="card-hint">Click to explore →</div>
       </div>
 
-      <!-- PROJECT 2 — Unity Navigation -->
-      <a href="https://github.com/br23aay/Autonomous-Robotic-Navigation-System-in-Unity" target="_blank" class="project-card reveal">
-        <div class="project-top">
-          <div class="project-icon">🚗</div>
-          <span class="project-badge badge-live">100 / 100</span>
-        </div>
-        <div class="project-title">Autonomous Robotic Navigation System — Unity</div>
-        <div class="project-desc">Sensor-driven autonomous vehicle built in Unity Engine. Real-time perception, path planning, and obstacle avoidance in a simulated environment. Scored 100/100 in MSc assessment.</div>
-        <div class="project-result">→ Full autonomous navigation · Sensor fusion · Unity ML-Agents</div>
-        <div class="project-tags">
-          <span class="project-tag">Unity</span>
-          <span class="project-tag">C#</span>
-          <span class="project-tag">Sensor Fusion</span>
-          <span class="project-tag">Autonomous Systems</span>
-        </div>
+      <!-- LLM Evaluation — LIVE -->
+      <div class="project-card reveal" onclick="openModal('llm')" style="cursor:pointer;">
+        <div class="project-top"><div class="project-icon">🔍</div><span class="project-badge badge-live">LIVE PROJECT</span></div>
+        <div class="project-title">LLM Evaluation Workflows — Hallucination &amp; Safety</div>
+        <div class="project-desc">End-to-end LLM evaluation engine with hallucination detection, safety guardrails, jailbreak detection, and RAG pipeline. Zero external dependencies — runs fully on CPU. 20 annotated test cases.</div>
+        <div class="project-result">→ 14 PASS · 6 WARN · Avg score 0.847 · Jailbreak + PII detected</div>
+        <div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">RAG</span><span class="project-tag">LLM Safety</span><span class="project-tag">Hallucination Detection</span></div>
+        <div class="card-hint">Click to explore →</div>
+      </div>
+
+      <!-- SLM Document Intelligence — PRODUCTION ✅ -->
+      <a href="https://github.com/br23aay/slm-document-intelligence" target="_blank" class="project-card reveal" onclick="gtag('event','click',{event_category:'Projects',event_label:'SLM Doc Intelligence'})">
+        <div class="project-top"><div class="project-icon">🧠</div><span class="project-badge badge-live">PRODUCTION</span></div>
+        <div class="project-title">On-Premise SLM Document Intelligence</div>
+        <div class="project-desc">Privacy-preserving document Q&amp;A and summarisation API built at Swayam Ltd. Phi-3 Mini via Ollama + ChromaDB RAG + Flask REST API + SQLite logging + hallucination and safety evaluation. All inference local — no data leaves the machine.</div>
+        <div class="project-result">→ 7 API endpoints · Avg groundedness 0.834 · CI/CD · GitHub Actions</div>
+        <div class="project-tags"><span class="project-tag">Phi-3 Mini</span><span class="project-tag">Ollama</span><span class="project-tag">ChromaDB</span><span class="project-tag">Flask</span><span class="project-tag">SQLite</span></div>
       </a>
 
-      <!-- PROJECT 3 — LLM Evaluation — click triggers modal -->
-      <div class="project-card reveal" onclick="openModal('llm')" style="cursor:pointer;">
-        <div class="project-top">
-          <div class="project-icon">🔍</div>
-          <span class="project-badge badge-live">LIVE PROJECT</span>
-        </div>
-        <div class="project-title">LLM Evaluation Workflows — Hallucination & Safety</div>
-        <div class="project-desc">End-to-end LLM evaluation engine with hallucination detection, safety guardrails, jailbreak detection, and RAG pipeline. Zero external dependencies — runs fully on CPU.</div>
-        <div class="project-result">→ 14 PASS · 6 WARN · Avg score 0.847 · Jailbreak + PII detected</div>
-        <div class="project-tags">
-          <span class="project-tag">Python</span>
-          <span class="project-tag">RAG</span>
-          <span class="project-tag">LLM Safety</span>
-          <span class="project-tag">Hallucination Detection</span>
-          <span class="project-tag">Azure AI</span>
-        </div>
-        <div class="card-hint">Click to explore →</div>
+      <!-- Vision Defect Inspection — PRODUCTION ✅ -->
+      <a href="https://github.com/br23aay/vision-defect-inspection-api" target="_blank" class="project-card reveal" onclick="gtag('event','click',{event_category:'Projects',event_label:'Vision Defect'})">
+        <div class="project-top"><div class="project-icon">🔬</div><span class="project-badge badge-live">SWAYAM LTD</span></div>
+        <div class="project-title">Vision-Based Defect Inspection REST API</div>
+        <div class="project-desc">Production computer vision microservice at Swayam Ltd. TensorFlow/Keras CNN (MobileNetV2 transfer learning) classifies product images as defect/no-defect. Flask REST API, Docker container, AWS deployment, GitHub Actions CI/CD, SQL analytics logging.</div>
+        <div class="project-result">→ TensorFlow · Docker · AWS · CI/CD · SQL pipeline · Production deployed</div>
+        <div class="project-tags"><span class="project-tag">TensorFlow</span><span class="project-tag">MobileNetV2</span><span class="project-tag">Flask</span><span class="project-tag">Docker</span><span class="project-tag">AWS</span><span class="project-tag">CI/CD</span></div>
+      </a>
+
+      <!-- Graceful Under Pressure — TESTING 🔄 -->
+      <div class="project-card reveal" style="cursor:default;">
+        <div class="project-top"><div class="project-icon">📉</div><span class="project-badge" style="background:rgba(0,255,148,0.1);color:#00e676;border:1px solid rgba(0,255,148,0.3);font-size:10px;padding:3px 8px;border-radius:20px;letter-spacing:0.5px;">TESTING</span></div>
+        <div class="project-title">Graceful Under Pressure</div>
+        <div class="project-desc">First systematic tactile-sensor failure robustness study for 24-DoF in-hand RL policies. Ablates random dropout, stuck-at faults, calibration drift, and additive noise on trained Shadow Hand PPO. Proposes a dropout-augmentation training curriculum. Directly addresses the sim-to-real gap for Shadow Hand deployment.</div>
+        <div class="project-result">→ Testing now · MuJoCo sensor ablation · Target: IEEE RA-L / Frontiers Robotics &amp; AI</div>
+        <div class="project-tags"><span class="project-tag">MuJoCo</span><span class="project-tag">PPO</span><span class="project-tag">Sim-to-Real</span><span class="project-tag">TensorFlow</span><span class="project-tag">Sensor Noise</span></div>
       </div>
 
-      <!-- PROJECT 4 — Published Paper — click triggers modal -->
+      <!-- DexHackBench — ONGOING 🔄 -->
+      <div class="project-card reveal" style="cursor:default;">
+        <div class="project-top"><div class="project-icon">⚡</div><span class="project-badge badge-wip">IN DEVELOPMENT</span></div>
+        <div class="project-title">DexHackBench</div>
+        <div class="project-desc">First reward-hacking benchmark and trace-based detector for dexterous in-hand manipulation. Instruments phase-based reward shaping with KL divergence and correlation-decay detectors on the Shadow Hand. Existing MuJoCo reward-hacking literature (arXiv:2507.05619) covers locomotion only — not high-DoF hands. Novel gap confirmed.</div>
+        <div class="project-result">→ Ongoing · Target: IEEE RA-L / NeurIPS Datasets &amp; Benchmarks</div>
+        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Reward Hacking</span><span class="project-tag">KL Divergence</span><span class="project-tag">Benchmark</span></div>
+      </div>
+
+      <!-- TraceMonitor — ONGOING 🔄 -->
+      <div class="project-card reveal" style="cursor:default;">
+        <div class="project-top"><div class="project-icon">🛡️</div><span class="project-badge badge-wip">IN DEVELOPMENT</span></div>
+        <div class="project-title">TraceMonitor</div>
+        <div class="project-desc">CPU-resident Small Language Model runtime safety monitor for reward hacking and unsafe behaviour in dexterous RL policies. Converts proprioceptive, tactile, and reward traces into textual summaries — prompts Phi-3 Mini (Ollama, CPU) to classify each window as nominal vs. hacking with a natural-language explanation. First SLM runtime monitor for in-hand manipulation.</div>
+        <div class="project-result">→ Ongoing · Phi-3 Mini · Ollama · Flask API · Target: IEEE RA-L / IROS / NeurIPS Safety</div>
+        <div class="project-tags"><span class="project-tag">Phi-3 Mini</span><span class="project-tag">Ollama</span><span class="project-tag">SLM</span><span class="project-tag">RL Safety</span><span class="project-tag">Flask</span></div>
+      </div>
+
+      <!-- Unity Navigation — ✅ -->
+      <a href="https://github.com/br23aay/Autonomous-Robotic-Navigation-System-in-Unity" target="_blank" class="project-card reveal">
+        <div class="project-top"><div class="project-icon">🚗</div><span class="project-badge badge-live">100 / 100</span></div>
+        <div class="project-title">Autonomous Robotic Navigation System — Unity</div>
+        <div class="project-desc">Sensor-driven autonomous vehicle in Unity Engine. Real-time perception, path planning, and obstacle avoidance in simulated environment. Scored 100/100 in MSc assessment.</div>
+        <div class="project-result">→ Full autonomous navigation · 7-sensor array · Unity ML-Agents</div>
+        <div class="project-tags"><span class="project-tag">Unity</span><span class="project-tag">C#</span><span class="project-tag">Sensor Fusion</span><span class="project-tag">Autonomous Systems</span></div>
+      </a>
+
+      <!-- Published Paper — ✅ -->
       <div class="project-card reveal" onclick="openModal('paper')" style="cursor:pointer;">
-        <div class="project-top">
-          <div class="project-icon">📄</div>
-          <span class="project-badge badge-pub">PUBLISHED</span>
-        </div>
+        <div class="project-top"><div class="project-icon">📄</div><span class="project-badge badge-pub">PUBLISHED</span></div>
         <div class="project-title">Dexterous In-Hand Manipulation — IJRES Paper</div>
         <div class="project-desc">Peer-reviewed publication on training a 24-DoF Shadow Hand using PPO reinforcement learning. Phase-based reward shaping, tactile sensor integration, and reward hacking discovery and mitigation.</div>
         <div class="project-result">→ 175° rotation · 97.2% accuracy · IF 7.52 · April 2025</div>
-        <div class="project-tags">
-          <span class="project-tag">PPO</span>
-          <span class="project-tag">MuJoCo</span>
-          <span class="project-tag">Stable-Baselines3</span>
-          <span class="project-tag">Published Research</span>
-        </div>
+        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Stable-Baselines3</span><span class="project-tag">Published Research</span></div>
         <div class="card-hint">Click to explore →</div>
       </div>
 
