@@ -1344,22 +1344,24 @@
       </div>
 
       <!-- SLM Document Intelligence — INDEPENDENT ✅ -->
-      <a href="https://github.com/br23aay/slm-document-intelligence" target="_blank" class="project-card reveal" onclick="gtag('event','click',{event_category:'Projects',event_label:'SLM Doc Intelligence'})">
+      <div class="project-card reveal" onclick="openModal('slm')" style="cursor:pointer;">
         <div class="project-top"><div class="project-icon">🧠</div><span class="project-badge badge-live">INDEPENDENT</span></div>
         <div class="project-title">On-Premise SLM Document Intelligence</div>
         <div class="project-desc">Privacy-preserving document Q&amp;A and summarisation API built independently by Bharadwaj Rachuri. Phi-3 Mini via Ollama + ChromaDB RAG + Flask REST API + SQLite logging + hallucination and safety evaluation. All inference local — no data leaves the machine.</div>
-        <div class="project-result">→ 7 API endpoints · Avg groundedness 0.834 · CI/CD · GitHub Actions</div>
+        <div class="project-result">→ 7 API endpoints · Avg groundedness 0.834 · 100% local inference</div>
         <div class="project-tags"><span class="project-tag">Phi-3 Mini</span><span class="project-tag">Ollama</span><span class="project-tag">ChromaDB</span><span class="project-tag">Flask</span><span class="project-tag">SQLite</span></div>
-      </a>
+        <div class="card-hint">Click to explore →</div>
+      </div>
 
       <!-- Vision Defect Inspection — INDEPENDENT ✅ -->
-      <a href="https://github.com/br23aay/vision-defect-inspection-api" target="_blank" class="project-card reveal" onclick="gtag('event','click',{event_category:'Projects',event_label:'Vision Defect'})">
+      <div class="project-card reveal" onclick="openModal('vision')" style="cursor:pointer;">
         <div class="project-top"><div class="project-icon">🔬</div><span class="project-badge badge-live">INDEPENDENT</span></div>
         <div class="project-title">Vision-Based Defect Inspection REST API</div>
         <div class="project-desc">Independent computer vision microservice built by Bharadwaj Rachuri. TensorFlow/Keras CNN (MobileNetV2 transfer learning) classifies product images as defect/no-defect. Flask REST API, Dockerised, AWS-deployment-ready, with a GitHub Actions CI/CD pipeline and SQL analytics logging.</div>
-        <div class="project-result">→ TensorFlow · Dockerised · AWS-ready · CI/CD configured · Built &amp; tested locally</div>
+        <div class="project-result">→ 98.3% train · 91.7% val accuracy · 26/26 tests passing · Built &amp; tested locally</div>
         <div class="project-tags"><span class="project-tag">TensorFlow</span><span class="project-tag">MobileNetV2</span><span class="project-tag">Flask</span><span class="project-tag">Docker</span><span class="project-tag">AWS</span><span class="project-tag">CI/CD</span></div>
-      </a>
+        <div class="card-hint">Click to explore →</div>
+      </div>
 
       <!-- Graceful Under Pressure — TESTING 🔄 -->
       <div class="project-card reveal" style="cursor:default;">
@@ -1581,6 +1583,66 @@
       </a>
     </div>
     <button class="proj-modal-close" onclick="closeModal('modal-llm')">✕ Close</button>
+  </div>
+</div>
+
+<!-- SLM MODAL -->
+<div class="proj-modal" id="modal-slm" onclick="handleModalBgClick(event,'modal-slm')">
+  <div class="proj-modal-box">
+    <div class="proj-modal-icon">🧠</div>
+    <div class="proj-modal-title">SLM Document Intelligence</div>
+    <div class="proj-modal-sub">Where would you like to go?</div>
+    <div class="proj-modal-btns">
+      <a href="slm-results-dashboard.html"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'SLM Dashboard'})"
+         class="proj-modal-btn btn-cyan">
+        <span class="proj-modal-btn-icon">📊</span>
+        <div>
+          <div class="proj-modal-btn-label">View Results Dashboard</div>
+          <div class="proj-modal-btn-sub">12 test queries · Avg groundedness 0.834</div>
+        </div>
+      </a>
+      <a href="https://github.com/br23aay/slm-document-intelligence" target="_blank"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'SLM GitHub'})"
+         class="proj-modal-btn btn-purple">
+        <span class="proj-modal-btn-icon">⌥</span>
+        <div>
+          <div class="proj-modal-btn-label">View Code on GitHub</div>
+          <div class="proj-modal-btn-sub">github.com/br23aay/slm-document-intelligence</div>
+        </div>
+      </a>
+    </div>
+    <button class="proj-modal-close" onclick="closeModal('modal-slm')">✕ Close</button>
+  </div>
+</div>
+
+<!-- VISION MODAL -->
+<div class="proj-modal" id="modal-vision" onclick="handleModalBgClick(event,'modal-vision')">
+  <div class="proj-modal-box">
+    <div class="proj-modal-icon">🔬</div>
+    <div class="proj-modal-title">Vision Defect Inspection API</div>
+    <div class="proj-modal-sub">Where would you like to go?</div>
+    <div class="proj-modal-btns">
+      <a href="vision-results-dashboard.html"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'Vision Dashboard'})"
+         class="proj-modal-btn btn-cyan">
+        <span class="proj-modal-btn-icon">📊</span>
+        <div>
+          <div class="proj-modal-btn-label">View Results Dashboard</div>
+          <div class="proj-modal-btn-sub">98.3% train · 91.7% val accuracy · 26/26 tests</div>
+        </div>
+      </a>
+      <a href="https://github.com/br23aay/vision-defect-inspection-api" target="_blank"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'Vision GitHub'})"
+         class="proj-modal-btn btn-purple">
+        <span class="proj-modal-btn-icon">⌥</span>
+        <div>
+          <div class="proj-modal-btn-label">View Code on GitHub</div>
+          <div class="proj-modal-btn-sub">github.com/br23aay/vision-defect-inspection-api</div>
+        </div>
+      </a>
+    </div>
+    <button class="proj-modal-close" onclick="closeModal('modal-vision')">✕ Close</button>
   </div>
 </div>
 
