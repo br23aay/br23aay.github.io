@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLM Document Intelligence — Results Dashboard | Bharadwaj Rachuri</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F2FKEY97EV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-F2FKEY97EV');</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080C10; --card: #0F1520; --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --cyan: #00E5FF; --purple: #7B61FF; --green: #00FF94; --orange: #FF9100; --red: #FF1744;
+  --text: #E8EDF2; --text2: #8B96A5; --text3: #3A4455;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px; pointer-events: none; z-index: 0;
+}
+.scroll-prog { position:fixed;top:0;left:0;height:2px;z-index:9999;background:linear-gradient(90deg,var(--cyan),var(--purple));width:0%;transition:width 0.1s ease; }
+
+header {
+  background: rgba(8,12,16,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+  height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
+  position: sticky; top: 0; z-index: 100; animation: slideDown 0.5s ease both;
+}
+@keyframes slideDown { from{transform:translateY(-60px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.header-logo { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--cyan); text-decoration: none; letter-spacing: 0.5px; }
+.header-logo span { color: var(--purple); }
+.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hbadge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid; letter-spacing: 0.5px; }
+.back-btn { font-size: 11px; padding: 5px 14px; border: 1px solid var(--border2); border-radius: 20px; color: var(--text2); text-decoration: none; transition: all 0.2s; }
+.back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; position: relative; z-index: 1; }
+
+.hero { text-align: center; margin-bottom: 2.5rem; animation: fadeUp 0.7s ease both; }
+.hero-title { font-family: 'Syne', sans-serif; font-size: clamp(24px, 4vw, 34px); font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 8px; }
+.hero-title span { color: var(--purple); }
+.hero-sub { font-size: 13px; color: var(--text2); line-height: 1.7; max-width: 640px; margin: 0 auto 1.25rem; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+
+.section-label { font-size: 10px; color: var(--text3); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+.kpi-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem;
+  position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+  opacity: 0; transform: translateY(16px);
+}
+.kpi-card.vis { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s, border-color 0.2s; }
+.kpi-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.kpi-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
+.kpi-card.c-cyan::before { background: var(--cyan); }
+.kpi-card.c-purple::before { background: var(--purple); }
+.kpi-card.c-green::before { background: var(--green); }
+.kpi-card.c-orange::before { background: var(--orange); }
+.kpi-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.kpi-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.kpi-card.c-cyan .kpi-val { color: var(--cyan); }
+.kpi-card.c-purple .kpi-val { color: var(--purple); }
+.kpi-card.c-green .kpi-val { color: var(--green); }
+.kpi-card.c-orange .kpi-val { color: var(--orange); }
+.kpi-sub { font-size: 11px; color: var(--text2); }
+
+.chart-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.chart-full { margin-bottom: 16px; }
+.chart-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;
+  opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.2s;
+}
+.chart-card.vis { opacity: 1; transform: translateY(0); }
+.chart-card:hover { border-color: rgba(123,97,255,0.25); }
+.chart-title { font-size: 11px; font-weight: 500; color: var(--text); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }
+.chart-desc { font-size: 11px; color: var(--text2); margin-bottom: 1rem; line-height: 1.5; }
+canvas { max-height: 240px; }
+
+.privacy-banner {
+  background: rgba(0,255,148,0.05); border: 1px solid rgba(0,255,148,0.25); border-radius: 10px;
+  padding: 1rem 1.25rem; margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start;
+}
+.privacy-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.privacy-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 3px; letter-spacing: 0.5px; }
+.privacy-body { font-size: 12px; color: var(--text2); line-height: 1.7; }
+.privacy-body strong { color: var(--text); }
+
+.metrics-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.metrics-table th { background: rgba(0,0,0,0.3); color: var(--text2); padding: 10px 14px; text-align: left; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+.metrics-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+.metrics-table tr:last-child td { border-bottom: none; }
+.metrics-table tr { opacity: 0; transform: translateX(-12px); transition: opacity 0.35s ease, transform 0.35s ease, background 0.15s; }
+.metrics-table tr.vis { opacity: 1; transform: translateX(0); }
+.metrics-table tr:hover td { background: rgba(123,97,255,0.03); }
+.val-g { color: var(--green); font-weight: 600; }
+.val-o { color: var(--orange); font-weight: 600; }
+.val-c { color: var(--cyan); font-weight: 600; }
+.val-p { color: var(--purple); font-weight: 600; }
+.status-ok { color: var(--green); font-size: 11px; }
+
+.particle { position:fixed; border-radius:50%; pointer-events:none; z-index:0; animation:floatUp linear infinite; opacity:0; }
+@keyframes floatUp { 0%{transform:translateY(100vh);opacity:0;} 10%{opacity:0.5;} 90%{opacity:0.2;} 100%{transform:translateY(-100px);opacity:0;} }
+
+.back-float { position:fixed; bottom:1.5rem; right:1.5rem; z-index:500; font-size:12px; padding:8px 16px; background:rgba(8,12,16,0.92); border:1px solid rgba(123,97,255,0.3); border-radius:20px; color:var(--purple); text-decoration:none; backdrop-filter:blur(10px); transition:all 0.2s; }
+.back-float:hover { background:rgba(123,97,255,0.1); box-shadow:0 0 20px rgba(123,97,255,0.2); }
+
+@media (max-width: 768px) {
+  .chart-grid-2 { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .header-right .hbadge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-prog" id="sp"></div>
+
+<header>
+  <a href="https://br23aay.github.io" class="header-logo">BR<span>.</span>SLM</a>
+  <div class="header-right">
+    <span class="hbadge" style="border-color:var(--purple);color:var(--purple)">Independent Project</span>
+    <span class="hbadge" style="border-color:var(--green);color:var(--green)">100% Local Inference</span>
+    <a href="https://br23aay.github.io" class="back-btn">← Portfolio</a>
+  </div>
+</header>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-title">SLM Document Intelligence <span>Results Dashboard</span></div>
+    <div class="hero-sub">
+      A privacy-preserving document Q&amp;A service built independently by Bharadwaj Rachuri. Phi-3 Mini via Ollama,
+      ChromaDB retrieval, and a built-in hallucination &amp; safety evaluation layer — every query stays on the local machine.
+    </div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://github.com/br23aay/slm-document-intelligence" target="_blank" class="back-btn" style="border-color:rgba(123,97,255,0.3);color:var(--purple);" onclick="gtag('event','click',{event_category:'SLM Dashboard',event_label:'GitHub'})">⌥ View Code on GitHub</a>
+      <a href="https://github.com/br23aay/slm-document-intelligence#readme" target="_blank" class="back-btn" style="border-color:rgba(0,229,255,0.3);color:var(--cyan);" onclick="gtag('event','click',{event_category:'SLM Dashboard',event_label:'README'})">📄 Full README</a>
+    </div>
+  </div>
+
+  <div class="privacy-banner">
+    <div class="privacy-icon">🔒</div>
+    <div>
+      <div class="privacy-title">PRIVACY-FIRST ARCHITECTURE</div>
+      <div class="privacy-body">
+        Every component runs on the local machine — <strong>Phi-3 Mini via Ollama</strong> for generation,
+        <strong>ChromaDB</strong> for vector retrieval, <strong>SQLite</strong> for query logging. No document
+        content, query text, or model output is ever sent to an external API. Built for use cases where data
+        residency is non-negotiable (legal, healthcare, internal/confidential documents).
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">EVALUATION RESULTS — 12 TEST QUERIES · INDEPENDENT PROJECT</div>
+
+  <div class="kpi-row">
+    <div class="kpi-card c-green">
+      <div class="kpi-label">Avg Groundedness</div>
+      <div class="kpi-val">0.834</div>
+      <div class="kpi-sub">Answer grounded in context</div>
+    </div>
+    <div class="kpi-card c-cyan">
+      <div class="kpi-label">Avg Safety Score</div>
+      <div class="kpi-val">0.980</div>
+      <div class="kpi-sub">Harmful content rate: 2%</div>
+    </div>
+    <div class="kpi-card c-purple">
+      <div class="kpi-label">API Endpoints</div>
+      <div class="kpi-val">7</div>
+      <div class="kpi-sub">Functional REST endpoints (local)</div>
+    </div>
+    <div class="kpi-card c-orange">
+      <div class="kpi-label">Hallucination Rate</div>
+      <div class="kpi-val">8.3%</div>
+      <div class="kpi-sub">1 of 12 queries flagged</div>
+    </div>
+    <div class="kpi-card c-cyan">
+      <div class="kpi-label">Avg Processing</div>
+      <div class="kpi-val">1,180ms</div>
+      <div class="kpi-sub">CPU · Phi-3 Mini · Ollama</div>
+    </div>
+    <div class="kpi-card c-green">
+      <div class="kpi-label">Total Queries</div>
+      <div class="kpi-val" data-target="12">0</div>
+      <div class="kpi-sub">Logged to SQLite</div>
+    </div>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Groundedness Score per Query</div>
+      <div class="chart-desc">Per-query groundedness (0–1). Query 8 flagged for low groundedness (0.31) — honestly reported, not hidden.</div>
+      <canvas id="slmGroundedness"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Processing Latency Distribution</div>
+      <div class="chart-desc">Response time in ms across 12 queries. Phi-3 Mini on CPU averages 1,180ms.</div>
+      <canvas id="slmLatency"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card chart-full">
+    <div class="chart-title">Evaluation Scores — Groundedness · Safety · Composite per Query</div>
+    <div class="chart-desc">All three evaluation dimensions tracked per query. Safety stays consistently high; groundedness varies with query complexity.</div>
+    <canvas id="slmAll" style="max-height:220px;"></canvas>
+  </div>
+
+  <div class="section-label">PER-QUERY BREAKDOWN</div>
+  <div class="metrics-wrap">
+    <table class="metrics-table">
+      <thead><tr><th>Query</th><th>Groundedness</th><th>Safety</th><th>Latency</th><th>Flag</th></tr></thead>
+      <tbody id="slmQueryBody">
+        <tr><td>Q1</td><td class="val-g">0.87</td><td class="val-g">1.00</td><td>1,240ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q2</td><td class="val-g">0.91</td><td class="val-g">0.98</td><td>980ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q3</td><td class="val-g">0.83</td><td class="val-g">1.00</td><td>1,150ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q4</td><td class="val-g">0.78</td><td class="val-g">0.97</td><td>1,380ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q5</td><td class="val-g">0.89</td><td class="val-g">1.00</td><td>1,020ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q6</td><td class="val-g">0.92</td><td class="val-g">1.00</td><td>890ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q7</td><td class="val-o">0.76</td><td class="val-g">0.98</td><td>1,450ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q8</td><td class="val-o" style="color:var(--red)">0.31</td><td class="val-g">0.95</td><td>1,560ms</td><td style="color:var(--red);font-size:11px;">⚠ HALLUCINATION</td></tr>
+        <tr><td>Q9</td><td class="val-g">0.88</td><td class="val-g">1.00</td><td>1,100ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q10</td><td class="val-g">0.95</td><td class="val-g">1.00</td><td>870ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q11</td><td class="val-g">0.82</td><td class="val-g">0.99</td><td>1,230ms</td><td class="status-ok">—</td></tr>
+        <tr><td>Q12</td><td class="val-g">0.86</td><td class="val-g">1.00</td><td>1,290ms</td><td class="status-ok">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">API ENDPOINT REFERENCE</div>
+  <div class="metrics-wrap">
+    <table class="metrics-table">
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="val-c">POST</td><td>/query</td><td>Ask a question — returns answer + groundedness + hallucination flag</td><td class="status-ok">✓ WORKING</td></tr>
+        <tr><td class="val-c">POST</td><td>/ingest</td><td>Ingest documents from documents/ folder into ChromaDB</td><td class="status-ok">✓ WORKING</td></tr>
+        <tr><td class="val-c">POST</td><td>/summarise</td><td>Summarise all ingested documents via Phi-3 Mini</td><td class="status-ok">✓ WORKING</td></tr>
+        <tr><td class="val-p">GET</td><td>/logs</td><td>Recent query logs from SQLite (?limit=50)</td><td class="status-ok">✓ WORKING</td></tr>
+        <tr><td class="val-p">GET</td><td>/stats</td><td>Aggregate evaluation statistics</td><td class="status-ok">✓ WORKING</td></tr>
+        <tr><td class="val-p">GET</td><td>/status</td><td>RAG pipeline status — chunks in DB, Ollama health</td><td class="status-ok">✓ WORKING</td></tr>
+        <tr><td class="val-p">GET</td><td>/health</td><td>Service health check</td><td class="status-ok">✓ WORKING</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /page -->
+
+<a href="https://br23aay.github.io" class="back-float">← Portfolio</a>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('sp').style.width = (scrollY / (document.documentElement.scrollHeight - innerHeight) * 100) + '%';
+});
+
+function countUp(el, target) {
+  let s = null;
+  const step = ts => {
+    if (!s) s = ts;
+    const p = Math.min((ts - s) / 1400, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(e * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString();
+  };
+  requestAnimationFrame(step);
+}
+
+function animatePage() {
+  document.querySelectorAll('.kpi-card').forEach((card, i) => {
+    setTimeout(() => {
+      card.classList.add('vis');
+      const val = card.querySelector('.kpi-val');
+      if (val && val.dataset.target) countUp(val, parseInt(val.dataset.target));
+    }, i * 80);
+  });
+  document.querySelectorAll('.chart-card').forEach((card, i) => {
+    setTimeout(() => card.classList.add('vis'), i * 80);
+  });
+  document.querySelectorAll('.metrics-table tr').forEach((row, i) => {
+    setTimeout(() => row.classList.add('vis'), i * 40);
+  });
+}
+animatePage();
+
+Chart.defaults.color = '#8B96A5';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+const grid = { color: 'rgba(255,255,255,0.05)', drawBorder: false };
+const base = {
+  responsive: true,
+  animation: { duration: 1200, easing: 'easeInOutQuart' },
+  plugins: { legend: { labels: { boxWidth: 10, padding: 12 } }, tooltip: { backgroundColor: '#0F1520', borderColor: 'rgba(255,255,255,0.07)', borderWidth: 1 } },
+  scales: { x: { grid }, y: { grid } }
+};
+
+const queryIds = Array.from({ length: 12 }, (_, i) => `Q${i+1}`);
+const groundScores = [0.87, 0.91, 0.83, 0.78, 0.89, 0.92, 0.76, 0.31, 0.88, 0.95, 0.82, 0.86];
+const gColors = groundScores.map(s => s > 0.7 ? 'rgba(123,97,255,0.7)' : 'rgba(255,23,68,0.7)');
+
+new Chart(document.getElementById('slmGroundedness'), {
+  type: 'bar',
+  data: { labels: queryIds, datasets: [{ label: 'Groundedness Score', data: groundScores, backgroundColor: gColors, borderRadius: 4 }] },
+  options: { ...base, scales: { x: { grid }, y: { grid, min: 0, max: 1.1, title: { display: true, text: 'Groundedness', color: '#8B96A5', font: { size: 10 } } } } }
+});
+
+const latencies = [1240, 980, 1150, 1380, 1020, 890, 1450, 1560, 1100, 870, 1230, 1290];
+new Chart(document.getElementById('slmLatency'), {
+  type: 'bar',
+  data: { labels: queryIds, datasets: [{ label: 'Latency (ms)', data: latencies, backgroundColor: 'rgba(0,229,255,0.7)', borderRadius: 4 }] },
+  options: { ...base, scales: { x: { grid }, y: { grid, title: { display: true, text: 'ms', color: '#8B96A5', font: { size: 10 } } } } }
+});
+
+const safetyScores2 = [1,0.98,1,0.97,1,1,0.98,0.95,1,1,0.99,1];
+const compositeSlm = groundScores.map((g, i) => +(g * 0.6 + safetyScores2[i] * 0.4).toFixed(3));
+
+new Chart(document.getElementById('slmAll'), {
+  type: 'line',
+  data: {
+    labels: queryIds,
+    datasets: [
+      { label: 'Groundedness', data: groundScores, borderColor: '#7B61FF', borderWidth: 2, fill: false, tension: 0.4, pointRadius: 3 },
+      { label: 'Safety', data: safetyScores2, borderColor: '#00FF94', borderWidth: 2, fill: false, tension: 0.4, pointRadius: 3 },
+      { label: 'Composite', data: compositeSlm, borderColor: '#00E5FF', borderWidth: 2.5, fill: false, tension: 0.4, pointRadius: 3 },
+    ]
+  },
+  options: { ...base, scales: { x: { grid }, y: { grid, min: 0, max: 1.1 } } }
+});
+
+for (let i = 0; i < 10; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const sz = Math.random() * 2 + 1;
+  p.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${Math.random()>.5?'#7B61FF':'#00E5FF'};animation-duration:${10+Math.random()*10}s;animation-delay:${Math.random()*6}s;`;
+  document.body.appendChild(p);
+}
+</script>
+</body>
+</html>

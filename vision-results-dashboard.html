@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vision Defect Inspection — Results Dashboard | Bharadwaj Rachuri</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F2FKEY97EV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-F2FKEY97EV');</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080C10; --card: #0F1520; --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --cyan: #00E5FF; --purple: #7B61FF; --green: #00FF94; --orange: #FF9100; --red: #FF1744;
+  --text: #E8EDF2; --text2: #8B96A5; --text3: #3A4455;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px; pointer-events: none; z-index: 0;
+}
+.scroll-prog { position:fixed;top:0;left:0;height:2px;z-index:9999;background:linear-gradient(90deg,var(--cyan),var(--orange));width:0%;transition:width 0.1s ease; }
+
+header {
+  background: rgba(8,12,16,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+  height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
+  position: sticky; top: 0; z-index: 100; animation: slideDown 0.5s ease both;
+}
+@keyframes slideDown { from{transform:translateY(-60px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.header-logo { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--cyan); text-decoration: none; letter-spacing: 0.5px; }
+.header-logo span { color: var(--orange); }
+.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hbadge { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid; letter-spacing: 0.5px; }
+.back-btn { font-size: 11px; padding: 5px 14px; border: 1px solid var(--border2); border-radius: 20px; color: var(--text2); text-decoration: none; transition: all 0.2s; }
+.back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; position: relative; z-index: 1; }
+
+.hero { text-align: center; margin-bottom: 2.5rem; animation: fadeUp 0.7s ease both; }
+.hero-title { font-family: 'Syne', sans-serif; font-size: clamp(24px, 4vw, 34px); font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 8px; }
+.hero-title span { color: var(--orange); }
+.hero-sub { font-size: 13px; color: var(--text2); line-height: 1.7; max-width: 660px; margin: 0 auto 1.25rem; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+
+.section-label { font-size: 10px; color: var(--text3); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+.kpi-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem;
+  position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+  opacity: 0; transform: translateY(16px);
+}
+.kpi-card.vis { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s, border-color 0.2s; }
+.kpi-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.kpi-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
+.kpi-card.c-cyan::before { background: var(--cyan); }
+.kpi-card.c-orange::before { background: var(--orange); }
+.kpi-card.c-green::before { background: var(--green); }
+.kpi-card.c-purple::before { background: var(--purple); }
+.kpi-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.kpi-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.kpi-card.c-cyan .kpi-val { color: var(--cyan); }
+.kpi-card.c-orange .kpi-val { color: var(--orange); }
+.kpi-card.c-green .kpi-val { color: var(--green); }
+.kpi-card.c-purple .kpi-val { color: var(--purple); }
+.kpi-sub { font-size: 11px; color: var(--text2); }
+
+.chart-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;
+  opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.2s;
+  margin-bottom: 16px;
+}
+.chart-card.vis { opacity: 1; transform: translateY(0); }
+.chart-card:hover { border-color: rgba(255,145,0,0.25); }
+.chart-title { font-size: 11px; font-weight: 500; color: var(--text); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }
+.chart-desc { font-size: 11px; color: var(--text2); margin-bottom: 1rem; line-height: 1.5; }
+canvas { max-height: 280px; }
+
+.phase-alert {
+  background: rgba(255,145,0,0.05); border: 1px solid rgba(255,145,0,0.3); border-radius: 10px;
+  padding: 1rem 1.25rem; margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start;
+}
+.phase-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.phase-title { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 3px; letter-spacing: 0.5px; }
+.phase-body { font-size: 12px; color: var(--text2); line-height: 1.7; }
+.phase-body strong { color: var(--text); }
+
+.architecture-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.arch-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; text-align: center; }
+.arch-val { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--cyan); margin-bottom: 3px; }
+.arch-label { font-size: 10px; color: var(--text2); letter-spacing: 0.4px; }
+
+.metrics-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.metrics-table th { background: rgba(0,0,0,0.3); color: var(--text2); padding: 10px 14px; text-align: left; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+.metrics-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+.metrics-table tr:last-child td { border-bottom: none; }
+.metrics-table tr { opacity: 0; transform: translateX(-12px); transition: opacity 0.35s ease, transform 0.35s ease, background 0.15s; }
+.metrics-table tr.vis { opacity: 1; transform: translateX(0); }
+.metrics-table tr:hover td { background: rgba(255,145,0,0.03); }
+.val-g { color: var(--green); font-weight: 600; }
+.val-o { color: var(--orange); font-weight: 600; }
+.val-c { color: var(--cyan); font-weight: 600; }
+.status-ok { color: var(--green); font-size: 11px; }
+
+.honesty-note {
+  background: rgba(255,255,255,0.02); border: 1px dashed var(--border2); border-radius: 10px;
+  padding: 0.9rem 1.1rem; margin-bottom: 16px; font-size: 11px; color: var(--text2); line-height: 1.7;
+}
+.honesty-note strong { color: var(--text); }
+
+.particle { position:fixed; border-radius:50%; pointer-events:none; z-index:0; animation:floatUp linear infinite; opacity:0; }
+@keyframes floatUp { 0%{transform:translateY(100vh);opacity:0;} 10%{opacity:0.5;} 90%{opacity:0.2;} 100%{transform:translateY(-100px);opacity:0;} }
+
+.back-float { position:fixed; bottom:1.5rem; right:1.5rem; z-index:500; font-size:12px; padding:8px 16px; background:rgba(8,12,16,0.92); border:1px solid rgba(255,145,0,0.3); border-radius:20px; color:var(--orange); text-decoration:none; backdrop-filter:blur(10px); transition:all 0.2s; }
+.back-float:hover { background:rgba(255,145,0,0.1); box-shadow:0 0 20px rgba(255,145,0,0.2); }
+
+@media (max-width: 768px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .header-right .hbadge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-prog" id="sp"></div>
+
+<header>
+  <a href="https://br23aay.github.io" class="header-logo">BR<span>.</span>Vision</a>
+  <div class="header-right">
+    <span class="hbadge" style="border-color:var(--orange);color:var(--orange)">Independent Project</span>
+    <span class="hbadge" style="border-color:var(--cyan);color:var(--cyan)">Built &amp; Tested Locally</span>
+    <a href="https://br23aay.github.io" class="back-btn">← Portfolio</a>
+  </div>
+</header>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-title">Vision Defect Inspection <span>Results Dashboard</span></div>
+    <div class="hero-sub">
+      A CNN-based defect classifier built independently by Bharadwaj Rachuri using transfer learning on
+      MobileNetV2. Built, trained, and tested locally — not deployed to a live endpoint.
+    </div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://github.com/br23aay/vision-defect-inspection-api" target="_blank" class="back-btn" style="border-color:rgba(255,145,0,0.3);color:var(--orange);" onclick="gtag('event','click',{event_category:'Vision Dashboard',event_label:'GitHub'})">⌥ View Code on GitHub</a>
+    </div>
+  </div>
+
+  <div class="section-label">TRAINING RESULTS — VERIFIED FROM TRAINING LOGS</div>
+
+  <div class="kpi-row">
+    <div class="kpi-card c-cyan">
+      <div class="kpi-label">Final Train Accuracy</div>
+      <div class="kpi-val" data-decimal="98.3" data-suffix="%">0%</div>
+      <div class="kpi-sub">Epoch 8 of 8</div>
+    </div>
+    <div class="kpi-card c-orange">
+      <div class="kpi-label">Final Validation Accuracy</div>
+      <div class="kpi-val" data-decimal="91.7" data-suffix="%">0%</div>
+      <div class="kpi-sub">Epoch 8 of 8</div>
+    </div>
+    <div class="kpi-card c-green">
+      <div class="kpi-label">Test Suite</div>
+      <div class="kpi-val" data-target="26" data-suffix="/26">0/26</div>
+      <div class="kpi-sub">All tests passing</div>
+    </div>
+    <div class="kpi-card c-purple">
+      <div class="kpi-label">Total Parameters</div>
+      <div class="kpi-val">2.42M</div>
+      <div class="kpi-sub">1.37M trainable</div>
+    </div>
+  </div>
+
+  <div class="phase-alert">
+    <div class="phase-icon">⚠️</div>
+    <div>
+      <div class="phase-title">FINE-TUNING INSTABILITY AT EPOCH 6 — SHOWN, NOT HIDDEN</div>
+      <div class="phase-body">
+        Training ran in two phases: <strong>Phase 1</strong> (epochs 1–5) trained only the classification head
+        with the MobileNetV2 base frozen, reaching 98.8% train / 95.0% val accuracy. <strong>Phase 2</strong>
+        (epochs 6–8) unfroze the last 20 MobileNetV2 layers for fine-tuning — and train accuracy immediately
+        dropped to <strong>78.3%</strong> at epoch 6, before recovering to 98.3% by epoch 7–8. This is the expected
+        signature of unfreezing pretrained layers with an unadjusted learning rate, not a bug. Final validation
+        accuracy (91.7%) is lower than the Phase 1 peak (98.3% at epoch 2) — a real trade-off worth being upfront about.
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Training &amp; Validation Accuracy — 8 Epochs</div>
+    <div class="chart-desc">Two-phase transfer learning: frozen-base head training (epochs 1–5) then fine-tuning the last 20 MobileNetV2 layers (epochs 6–8). Dotted orange line marks the phase transition.</div>
+    <canvas id="accChart"></canvas>
+  </div>
+
+  <div class="section-label">MODEL ARCHITECTURE — VERIFIED FROM SAVED MODEL FILE</div>
+
+  <div class="architecture-row">
+    <div class="arch-card"><div class="arch-val">MobileNetV2</div><div class="arch-label">Backbone</div></div>
+    <div class="arch-card"><div class="arch-val">224×224×3</div><div class="arch-label">Input shape</div></div>
+    <div class="arch-card"><div class="arch-val">2.42M</div><div class="arch-label">Total params</div></div>
+    <div class="arch-card"><div class="arch-val">1.37M</div><div class="arch-label">Trainable params</div></div>
+    <div class="arch-card"><div class="arch-val">21.3 MB</div><div class="arch-label">Saved file size</div></div>
+    <div class="arch-card"><div class="arch-val">7</div><div class="arch-label">Layers (top level)</div></div>
+  </div>
+
+  <div class="metrics-wrap">
+    <table class="metrics-table">
+      <thead><tr><th>Layer</th><th>Output Shape</th><th>Params</th></tr></thead>
+      <tbody id="archBody">
+        <tr><td>Input</td><td class="val-c">(224, 224, 3)</td><td>0</td></tr>
+        <tr><td>MobileNetV2 (backbone)</td><td class="val-c">(7, 7, 1280)</td><td class="val-o">2,257,984</td></tr>
+        <tr><td>GlobalAveragePooling2D</td><td class="val-c">(1280)</td><td>0</td></tr>
+        <tr><td>Dropout</td><td class="val-c">(1280)</td><td>0</td></tr>
+        <tr><td>Dense (128, ReLU)</td><td class="val-c">(128)</td><td class="val-g">163,968</td></tr>
+        <tr><td>Dropout</td><td class="val-c">(128)</td><td>0</td></tr>
+        <tr><td>Dense (1, Sigmoid)</td><td class="val-c">(1)</td><td class="val-g">129</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="honesty-note">
+    <strong>What's verified vs. not shown here:</strong> Train/validation accuracy per epoch, test suite result,
+    and full model architecture are confirmed directly from training logs and the saved <code>.keras</code> model
+    file. Validation AUC, exact training time, and dataset composition were not available in the source material
+    used to build this page, so they are intentionally omitted rather than estimated.
+  </div>
+
+</div><!-- /page -->
+
+<a href="https://br23aay.github.io" class="back-float">← Portfolio</a>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('sp').style.width = (scrollY / (document.documentElement.scrollHeight - innerHeight) * 100) + '%';
+});
+
+function countUp(el, target, decimals, suffix) {
+  let s = null;
+  const step = ts => {
+    if (!s) s = ts;
+    const p = Math.min((ts - s) / 1400, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    const cur = decimals ? (e * target).toFixed(1) : Math.floor(e * target);
+    el.textContent = cur + suffix;
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = (decimals ? target.toFixed(1) : target) + suffix;
+  };
+  requestAnimationFrame(step);
+}
+
+function animatePage() {
+  document.querySelectorAll('.kpi-card').forEach((card, i) => {
+    setTimeout(() => {
+      card.classList.add('vis');
+      const val = card.querySelector('.kpi-val');
+      if (!val) return;
+      const suffix = val.dataset.suffix || '';
+      if (val.dataset.decimal) countUp(val, parseFloat(val.dataset.decimal), true, suffix);
+      else if (val.dataset.target) countUp(val, parseInt(val.dataset.target), false, suffix);
+    }, i * 80);
+  });
+  document.querySelectorAll('.chart-card').forEach((card, i) => {
+    setTimeout(() => card.classList.add('vis'), i * 80);
+  });
+  document.querySelectorAll('.metrics-table tr').forEach((row, i) => {
+    setTimeout(() => row.classList.add('vis'), i * 40);
+  });
+}
+animatePage();
+
+Chart.defaults.color = '#8B96A5';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+const grid = { color: 'rgba(255,255,255,0.05)', drawBorder: false };
+
+const epochs = [1,2,3,4,5,6,7,8];
+const trainAcc = [85.8, 96.3, 98.3, 98.3, 98.8, 78.3, 98.3, 98.3];
+const valAcc = [96.7, 98.3, 93.3, 96.7, 95.0, 90.0, 90.0, 91.7];
+
+new Chart(document.getElementById('accChart'), {
+  type: 'line',
+  data: {
+    labels: epochs,
+    datasets: [
+      { label: 'Train accuracy', data: trainAcc, borderColor: '#00E5FF', backgroundColor: '#00E5FF', borderWidth: 2.5, pointRadius: 4, tension: 0.25 },
+      { label: 'Validation accuracy', data: valAcc, borderColor: '#00FF94', backgroundColor: '#00FF94', borderWidth: 2.5, borderDash: [6,4], pointRadius: 4, tension: 0.25 },
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeInOutQuart' },
+    plugins: {
+      legend: { labels: { boxWidth: 10, padding: 14 } },
+      tooltip: { backgroundColor: '#0F1520', borderColor: 'rgba(255,255,255,0.07)', borderWidth: 1 },
+    },
+    scales: {
+      x: { grid, title: { display: true, text: 'Epoch', color: '#8B96A5', font: { size: 10 } } },
+      y: { grid, min: 70, max: 100, title: { display: true, text: 'Accuracy (%)', color: '#8B96A5', font: { size: 10 } }, ticks: { callback: v => v + '%' } }
+    }
+  },
+  plugins: [{
+    id: 'phaseLine',
+    afterDraw(chart) {
+      const xScale = chart.scales.x;
+      const yScale = chart.scales.y;
+      const ctx = chart.ctx;
+      const xPos = xScale.getPixelForValue(5.5);
+      ctx.save();
+      ctx.strokeStyle = '#FF9100';
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(xPos, yScale.top);
+      ctx.lineTo(xPos, yScale.bottom);
+      ctx.stroke();
+      ctx.fillStyle = '#FF9100';
+      ctx.font = '10px DM Mono';
+      ctx.fillText('Fine-tuning begins', xPos + 6, yScale.top + 14);
+      ctx.restore();
+    }
+  }]
+});
+
+for (let i = 0; i < 10; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const sz = Math.random() * 2 + 1;
+  p.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${Math.random()>.5?'#FF9100':'#00E5FF'};animation-duration:${10+Math.random()*10}s;animation-delay:${Math.random()*6}s;`;
+  document.body.appendChild(p);
+}
+</script>
+</body>
+</html>
