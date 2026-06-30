@@ -514,6 +514,64 @@
     color: var(--text3);
   }
 
+  .card-hint {
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: 0.75rem;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .project-card:hover .card-hint { opacity: 1; }
+
+  /* ---- PROJECT MODALS ---- */
+  .proj-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    z-index: 9000;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .proj-modal.open { display: flex; }
+  .proj-modal-box {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 2rem 2rem 1.5rem;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    animation: modalIn 0.25s ease both;
+  }
+  @keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(8px); } to { opacity:1; transform:none; } }
+  .proj-modal-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .proj-modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .proj-modal-sub { font-size: 12px; color: var(--text2); margin-bottom: 1.25rem; }
+  .proj-modal-btns { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+  .proj-modal-btn {
+    display: flex; align-items: center; gap: 14px; text-decoration: none;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.9rem 1rem; text-align: left;
+    transition: all 0.2s;
+  }
+  .proj-modal-btn:hover { background: rgba(255,255,255,0.06); }
+  .btn-cyan { border-color: rgba(0,229,255,0.3); }
+  .btn-cyan:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(0,229,255,0.1); }
+  .btn-purple { border-color: rgba(123,97,255,0.3); }
+  .btn-purple:hover { border-color: var(--accent2); box-shadow: 0 0 20px rgba(123,97,255,0.1); }
+  .proj-modal-btn-icon { font-size: 1.25rem; flex-shrink: 0; }
+  .proj-modal-btn-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .proj-modal-btn-sub { font-size: 11px; color: var(--text2); }
+  .proj-modal-close {
+    background: transparent; border: 1px solid var(--border); border-radius: 20px;
+    color: var(--text2); font-size: 11px; padding: 5px 16px; cursor: pointer;
+    font-family: 'DM Mono', monospace; transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .proj-modal-close:hover { border-color: var(--border2); color: var(--text); }
+
   /* ---- SKILLS ---- */
   .skills-grid {
     display: grid;
@@ -1321,268 +1379,159 @@
     <h2 class="section-title reveal">Built Work</h2>
     <p class="section-sub reveal">Real projects with real results — each extending the research foundation.</p>
 
+    <!-- ══════════════════════════════════════════════════════════
+         PROJECT GRID — ORDER:
+         1. Published research (IJRES paper)
+         2. Completed — research outputs with live dashboards
+         3. Completed — independent engineering builds
+         4. Personal AI tools (Tony, CareerOS)
+         5. Upcoming / in-development research
+    ══════════════════════════════════════════════════════════ -->
     <div class="projects-grid">
 
-      <!-- Shadow Hand Visualiser — LIVE -->
-      <div class="project-card featured reveal" onclick="openModal('shadowhand')" style="cursor:pointer;">
-        <div class="project-top"><div class="project-icon">🦾</div><span class="project-badge badge-pub">LIVE TOOL</span></div>
-        <div class="project-title">Shadow Hand Reward Hacking Visualiser</div>
-        <div class="project-desc">Interactive dashboard on published PPO research. Explore reward hacking emergence, phase-based reward comparison, touch sensor accuracy across all 5 fingers, KL divergence, and seed reproducibility — all from the IJRES paper.</div>
-        <div class="project-result">→ 7 interactive charts · 92 training episodes · IJRES IF 7.52</div>
-        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Chart.js</span><span class="project-tag">Reward Hacking</span><span class="project-tag">AI Safety</span></div>
+      <!-- 1. PUBLISHED RESEARCH ─────────────────────────────────────── -->
+      <div class="project-card featured reveal" onclick="openModal('paper')" style="cursor:pointer;">
+        <div class="project-top"><div class="project-icon">📄</div><span class="project-badge badge-pub">PUBLISHED · IJRES</span></div>
+        <div class="project-title">Dexterous In-Hand Manipulation — Shadow Hand PPO</div>
+        <div class="project-desc">Peer-reviewed research on training a 24-DoF Shadow Hand using PPO reinforcement learning. Phase-based reward shaping, tactile sensor integration, reward hacking discovery and mitigation — published April 2025.</div>
+        <div class="project-result">→ 175° rotation · 97.2% accuracy · IF 7.52 · 3 seeds: 3.118 ± 0.047 rad</div>
+        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">PyTorch</span><span class="project-tag">Stable-Baselines3</span><span class="project-tag">Published Research</span></div>
         <div class="card-hint">Click to explore →</div>
       </div>
 
-      <!-- LLM Evaluation — LIVE -->
+      <!-- 2. COMPLETED — LIVE DASHBOARDS ───────────────────────────── -->
+      <div class="project-card reveal" onclick="openModal('shadowhand')" style="cursor:pointer;">
+        <div class="project-top"><div class="project-icon">📊</div><span class="project-badge badge-live">LIVE TOOL</span></div>
+        <div class="project-title">Shadow Hand Reward Hacking Visualiser</div>
+        <div class="project-desc">Interactive dashboard built on the published research data. Explore reward hacking emergence, phase-based reward comparison, KL divergence, touch sensor accuracy across all 5 fingers, and 3-seed reproducibility.</div>
+        <div class="project-result">→ 7 interactive charts · 92 training episodes · Real published data</div>
+        <div class="project-tags"><span class="project-tag">Chart.js</span><span class="project-tag">JavaScript</span><span class="project-tag">AI Safety</span><span class="project-tag">Reward Hacking</span></div>
+        <div class="card-hint">Click to explore →</div>
+      </div>
+
       <div class="project-card reveal" onclick="openModal('llm')" style="cursor:pointer;">
         <div class="project-top"><div class="project-icon">🔍</div><span class="project-badge badge-live">LIVE PROJECT</span></div>
         <div class="project-title">LLM Evaluation Workflows — Hallucination &amp; Safety</div>
-        <div class="project-desc">End-to-end LLM evaluation engine with hallucination detection, safety guardrails, jailbreak detection, and RAG pipeline. Zero external dependencies — runs fully on CPU. 20 annotated test cases.</div>
-        <div class="project-result">→ 14 PASS · 6 WARN · Avg score 0.847 · Jailbreak + PII detected</div>
+        <div class="project-desc">End-to-end LLM evaluation engine with hallucination detection, safety guardrails, jailbreak detection, and RAG pipeline. Zero external dependencies — runs fully on CPU.</div>
+        <div class="project-result">→ 14 PASS · 6 WARN · 0 FAIL · Avg score 0.847 · 20 outputs scored</div>
         <div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">RAG</span><span class="project-tag">LLM Safety</span><span class="project-tag">Hallucination Detection</span></div>
         <div class="card-hint">Click to explore →</div>
       </div>
 
-      <!-- SLM Document Intelligence — INDEPENDENT ✅ -->
+      <!-- 3. COMPLETED — INDEPENDENT ENGINEERING ───────────────────── -->
       <div class="project-card reveal" onclick="openModal('slm')" style="cursor:pointer;">
         <div class="project-top"><div class="project-icon">🧠</div><span class="project-badge badge-live">INDEPENDENT</span></div>
         <div class="project-title">On-Premise SLM Document Intelligence</div>
-        <div class="project-desc">Privacy-preserving document Q&amp;A and summarisation API built independently by Bharadwaj Rachuri. Phi-3 Mini via Ollama + ChromaDB RAG + Flask REST API + SQLite logging + hallucination and safety evaluation. All inference local — no data leaves the machine.</div>
-        <div class="project-result">→ 7 API endpoints · Avg groundedness 0.834 · 100% local inference</div>
+        <div class="project-desc">Privacy-preserving local document Q&amp;A built independently. Phi-3 Mini via Ollama + ChromaDB RAG + Flask REST API + SQLite logging + hallucination and safety evaluation. All inference local — no data leaves the machine.</div>
+        <div class="project-result">→ 7 working endpoints · Avg groundedness 0.834 · 100% local inference</div>
         <div class="project-tags"><span class="project-tag">Phi-3 Mini</span><span class="project-tag">Ollama</span><span class="project-tag">ChromaDB</span><span class="project-tag">Flask</span><span class="project-tag">SQLite</span></div>
         <div class="card-hint">Click to explore →</div>
       </div>
 
-      <!-- Vision Defect Inspection — INDEPENDENT ✅ -->
       <div class="project-card reveal" onclick="openModal('vision')" style="cursor:pointer;">
         <div class="project-top"><div class="project-icon">🔬</div><span class="project-badge badge-live">INDEPENDENT</span></div>
         <div class="project-title">Vision-Based Defect Inspection REST API</div>
-        <div class="project-desc">Independent computer vision microservice built by Bharadwaj Rachuri. TensorFlow/Keras CNN (MobileNetV2 transfer learning) classifies product images as defect/no-defect. Flask REST API, Dockerised, AWS-deployment-ready, with a GitHub Actions CI/CD pipeline and SQL analytics logging.</div>
-        <div class="project-result">→ 98.3% train · 91.7% val accuracy · 26/26 tests passing · Built &amp; tested locally</div>
-        <div class="project-tags"><span class="project-tag">TensorFlow</span><span class="project-tag">MobileNetV2</span><span class="project-tag">Flask</span><span class="project-tag">Docker</span><span class="project-tag">AWS</span><span class="project-tag">CI/CD</span></div>
+        <div class="project-desc">CNN-based defect classifier built independently using MobileNetV2 transfer learning. Flask REST API, Dockerised, AWS-deployment-ready, with GitHub Actions CI/CD pipeline. Built and tested locally.</div>
+        <div class="project-result">→ 98.3% train · 91.7% val accuracy · 26/26 tests passing</div>
+        <div class="project-tags"><span class="project-tag">TensorFlow</span><span class="project-tag">MobileNetV2</span><span class="project-tag">Flask</span><span class="project-tag">Docker</span><span class="project-tag">AWS</span></div>
         <div class="card-hint">Click to explore →</div>
       </div>
 
-      <!-- Graceful Under Pressure — TESTING 🔄 -->
-      <div class="project-card reveal" style="cursor:default;">
-        <div class="project-top"><div class="project-icon">📉</div><span class="project-badge" style="background:rgba(0,255,148,0.1);color:#00e676;border:1px solid rgba(0,255,148,0.3);font-size:10px;padding:3px 8px;border-radius:20px;letter-spacing:0.5px;">TESTING</span></div>
-        <div class="project-title">Graceful Under Pressure</div>
-        <div class="project-desc">First systematic tactile-sensor failure robustness study for 24-DoF in-hand RL policies. Ablates random dropout, stuck-at faults, calibration drift, and additive noise on trained Shadow Hand PPO. Proposes a dropout-augmentation training curriculum. Directly addresses the sim-to-real gap for Shadow Hand deployment.</div>
-        <div class="project-result">→ Testing now · MuJoCo sensor ablation · Target: IEEE RA-L / Frontiers Robotics &amp; AI</div>
-        <div class="project-tags"><span class="project-tag">MuJoCo</span><span class="project-tag">PPO</span><span class="project-tag">Sim-to-Real</span><span class="project-tag">TensorFlow</span><span class="project-tag">Sensor Noise</span></div>
-      </div>
-
-      <!-- DexHackBench — ONGOING 🔄 -->
-      <div class="project-card reveal" style="cursor:default;">
-        <div class="project-top"><div class="project-icon">⚡</div><span class="project-badge badge-wip">IN DEVELOPMENT</span></div>
-        <div class="project-title">DexHackBench</div>
-        <div class="project-desc">First reward-hacking benchmark and trace-based detector for dexterous in-hand manipulation. Instruments phase-based reward shaping with KL divergence and correlation-decay detectors on the Shadow Hand. Existing MuJoCo reward-hacking literature (arXiv:2507.05619) covers locomotion only — not high-DoF hands. Novel gap confirmed.</div>
-        <div class="project-result">→ Ongoing · Target: IEEE RA-L / NeurIPS Datasets &amp; Benchmarks</div>
-        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Reward Hacking</span><span class="project-tag">KL Divergence</span><span class="project-tag">Benchmark</span></div>
-      </div>
-
-      <!-- TraceMonitor — ONGOING 🔄 -->
-      <div class="project-card reveal" style="cursor:default;">
-        <div class="project-top"><div class="project-icon">🛡️</div><span class="project-badge badge-wip">IN DEVELOPMENT</span></div>
-        <div class="project-title">TraceMonitor</div>
-        <div class="project-desc">CPU-resident Small Language Model runtime safety monitor for reward hacking and unsafe behaviour in dexterous RL policies. Converts proprioceptive, tactile, and reward traces into textual summaries — prompts Phi-3 Mini (Ollama, CPU) to classify each window as nominal vs. hacking with a natural-language explanation. First SLM runtime monitor for in-hand manipulation.</div>
-        <div class="project-result">→ Ongoing · Phi-3 Mini · Ollama · Flask API · Target: IEEE RA-L / IROS / NeurIPS Safety</div>
-        <div class="project-tags"><span class="project-tag">Phi-3 Mini</span><span class="project-tag">Ollama</span><span class="project-tag">SLM</span><span class="project-tag">RL Safety</span><span class="project-tag">Flask</span></div>
-      </div>
-
-      <!-- Unity Navigation — ✅ -->
-      <a href="https://github.com/br23aay/Autonomous-Robotic-Navigation-System-in-Unity" target="_blank" class="project-card reveal">
+      <a href="https://github.com/br23aay/Autonomous-Robotic-Navigation-System-in-Unity" target="_blank" class="project-card reveal" onclick="gtag('event','click',{event_category:'Projects',event_label:'Unity Navigation'})">
         <div class="project-top"><div class="project-icon">🚗</div><span class="project-badge badge-live">100 / 100</span></div>
-        <div class="project-title">Autonomous Robotic Navigation System — Unity</div>
-        <div class="project-desc">Sensor-driven autonomous vehicle in Unity Engine. Real-time perception, path planning, and obstacle avoidance in simulated environment. Scored 100/100 in MSc assessment.</div>
-        <div class="project-result">→ Full autonomous navigation · 7-sensor array · Unity ML-Agents</div>
+        <div class="project-title">Autonomous Robotic Navigation — Unity</div>
+        <div class="project-desc">Sensor-driven autonomous vehicle in Unity Engine with real-time obstacle avoidance and lane-keeping. Scored 100/100 in MSc assessment.</div>
+        <div class="project-result">→ 7-sensor raycast array · Full autonomous navigation · MSc 100/100</div>
         <div class="project-tags"><span class="project-tag">Unity</span><span class="project-tag">C#</span><span class="project-tag">Sensor Fusion</span><span class="project-tag">Autonomous Systems</span></div>
       </a>
 
-      <!-- Published Paper — ✅ -->
-      <div class="project-card reveal" onclick="openModal('paper')" style="cursor:pointer;">
-        <div class="project-top"><div class="project-icon">📄</div><span class="project-badge badge-pub">PUBLISHED</span></div>
-        <div class="project-title">Dexterous In-Hand Manipulation — IJRES Paper</div>
-        <div class="project-desc">Peer-reviewed publication on training a 24-DoF Shadow Hand using PPO reinforcement learning. Phase-based reward shaping, tactile sensor integration, and reward hacking discovery and mitigation.</div>
-        <div class="project-result">→ 175° rotation · 97.2% accuracy · IF 7.52 · April 2025</div>
-        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Stable-Baselines3</span><span class="project-tag">Published Research</span></div>
+      <!-- 4. PERSONAL AI TOOLS ──────────────────────────────────────── -->
+      <div class="project-card reveal" onclick="openModal('tony')" style="cursor:pointer;">
+        <div class="project-top"><div class="project-icon">🤖</div><span class="project-badge" style="background:rgba(0,229,255,0.08);color:var(--accent);border:1px solid rgba(0,229,255,0.3);font-size:10px;padding:3px 8px;border-radius:20px;">PERSONAL TOOL</span></div>
+        <div class="project-title">Tony — Local JARVIS-Style AI Assistant</div>
+        <div class="project-desc">A local-first personal AI assistant with a skill-based context loader. At startup Tony scans skill folders — when your message matches a skill's triggers, that skill's instructions are loaded for that reply and nothing else. Small context, focused behaviour. Python + Flask + Ollama backend, HTML frontend.</div>
+        <div class="project-result">→ Skill-based context system · Multi-LLM backend · Python + Flask + Ollama</div>
+        <div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">Flask</span><span class="project-tag">Ollama</span><span class="project-tag">LLM</span><span class="project-tag">Local AI</span></div>
         <div class="card-hint">Click to explore →</div>
+      </div>
+
+      <div class="project-card reveal" onclick="openModal('careeros')" style="cursor:pointer;">
+        <div class="project-top"><div class="project-icon">🎯</div><span class="project-badge" style="background:rgba(0,229,255,0.08);color:var(--accent);border:1px solid rgba(0,229,255,0.3);font-size:10px;padding:3px 8px;border-radius:20px;">PERSONAL TOOL</span></div>
+        <div class="project-title">CareerOS — AI Career Operating System</div>
+        <div class="project-desc">A 13-department local-first AI system for job hunting. Finds UK graduate AI/ML roles, verifies them (ghost-job detector), ranks against profile, drafts tailored applications, prepares outreach and interview material, tracks outcomes. Human approval gate — never auto-submits. CAPTCHA bypass disabled.</div>
+        <div class="project-result">→ 13 departments · Live: collection, matching, resume, ATS, analytics · Python / SQLite</div>
+        <div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">Streamlit</span><span class="project-tag">SQLite</span><span class="project-tag">Adzuna API</span><span class="project-tag">Gmail API</span></div>
+        <div class="card-hint">Click to explore →</div>
+      </div>
+
+      <!-- 5. UPCOMING RESEARCH ──────────────────────────────────────── -->
+      <div class="project-card reveal" style="cursor:default; opacity:0.85;">
+        <div class="project-top"><div class="project-icon">📉</div><span class="project-badge" style="background:rgba(0,255,148,0.08);color:#00FF94;border:1px solid rgba(0,255,148,0.3);font-size:10px;padding:3px 8px;border-radius:20px;">TESTING NOW</span></div>
+        <div class="project-title">Graceful Under Pressure</div>
+        <div class="project-desc">First systematic benchmarking of tactile-sensor failure robustness on a 24-DoF in-hand RL policy. Ablates random dropout, stuck-at faults, calibration drift, and additive noise on the trained Shadow Hand PPO. Connects sim-to-real transfer directly.</div>
+        <div class="project-result">→ Active testing · MuJoCo sensor ablation · Target: IEEE RA-L / Frontiers Robotics &amp; AI</div>
+        <div class="project-tags"><span class="project-tag">MuJoCo</span><span class="project-tag">PPO</span><span class="project-tag">Sim-to-Real</span><span class="project-tag">Sensor Noise</span></div>
+      </div>
+
+      <div class="project-card reveal" style="cursor:default; opacity:0.85;">
+        <div class="project-top"><div class="project-icon">⚡</div><span class="project-badge badge-wip">IN DEVELOPMENT</span></div>
+        <div class="project-title">DexHackBench</div>
+        <div class="project-desc">First reward-hacking benchmark and trace-based detector for dexterous in-hand manipulation. Instruments phase-based reward shaping with KL divergence and correlation-decay detectors. Confirmed novel research gap vs. arXiv:2507.05619 (locomotion-only prior work).</div>
+        <div class="project-result">→ Ongoing · Target: IEEE RA-L / NeurIPS Datasets &amp; Benchmarks</div>
+        <div class="project-tags"><span class="project-tag">PPO</span><span class="project-tag">MuJoCo</span><span class="project-tag">Reward Hacking</span><span class="project-tag">KL Divergence</span></div>
+      </div>
+
+      <div class="project-card reveal" style="cursor:default; opacity:0.85;">
+        <div class="project-top"><div class="project-icon">🛡️</div><span class="project-badge badge-wip">IN DEVELOPMENT</span></div>
+        <div class="project-title">TraceMonitor</div>
+        <div class="project-desc">CPU-resident Small Language Model runtime safety monitor for reward hacking and unsafe behaviour in dexterous RL policies. Phi-3 Mini via Ollama reads textualized proprioceptive/reward traces to classify each window as nominal vs. hacking — first SLM monitor for in-hand manipulation.</div>
+        <div class="project-result">→ Ongoing · Phi-3 Mini · Ollama · Target: IEEE RA-L / IROS / NeurIPS Safety</div>
+        <div class="project-tags"><span class="project-tag">Phi-3 Mini</span><span class="project-tag">Ollama</span><span class="project-tag">RL Safety</span><span class="project-tag">SLM</span></div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     PROJECT MODALS
-══════════════════════════════════════════ -->
-<style>
-  .card-hint {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    margin-top: 1rem;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-  }
-  .project-card:hover .card-hint { opacity: 1; }
-
-  /* MODAL OVERLAY */
-  .proj-modal {
-    position: fixed; inset: 0; z-index: 9000;
-    background: rgba(8,12,16,0.92);
-    backdrop-filter: blur(12px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 2rem;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  .proj-modal.open {
-    opacity: 1; pointer-events: all;
-  }
-
-  /* MODAL BOX */
-  .proj-modal-box {
-    background: var(--bg2, #0D1117);
-    border: 1px solid rgba(0,229,255,0.2);
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
-    max-width: 480px; width: 100%;
-    text-align: center;
-    transform: translateY(20px) scale(0.97);
-    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
-    box-shadow: 0 0 60px rgba(0,229,255,0.1), 0 24px 64px rgba(0,0,0,0.6);
-  }
-  .proj-modal.open .proj-modal-box {
-    transform: translateY(0) scale(1);
-  }
-
-  .proj-modal-icon { font-size: 3rem; margin-bottom: 1rem; }
-
-  .proj-modal-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px; font-weight: 700;
-    color: var(--text); margin-bottom: 6px;
-  }
-
-  .proj-modal-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px; color: var(--text2);
-    margin-bottom: 2rem; letter-spacing: 0.04em;
-  }
-
-  /* CHOICE BUTTONS */
-  .proj-modal-btns { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem; }
-
-  .proj-modal-btn {
-    display: flex; align-items: center; gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: 10px; border: 1px solid;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    text-align: left;
-  }
-  .proj-modal-btn:hover { transform: translateX(4px); }
-
-  .btn-cyan {
-    border-color: rgba(0,229,255,0.3);
-    background: rgba(0,229,255,0.04);
-    color: var(--accent);
-  }
-  .btn-cyan:hover { background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.6); box-shadow: 0 0 20px rgba(0,229,255,0.1); }
-
-  .btn-purple {
-    border-color: rgba(123,97,255,0.3);
-    background: rgba(123,97,255,0.04);
-    color: var(--accent2);
-  }
-  .btn-purple:hover { background: rgba(123,97,255,0.1); border-color: rgba(123,97,255,0.6); box-shadow: 0 0 20px rgba(123,97,255,0.1); }
-
-  .proj-modal-btn-icon { font-size: 1.5rem; flex-shrink: 0; }
-
-  .proj-modal-btn-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px; font-weight: 600;
-    margin-bottom: 2px;
-  }
-  .proj-modal-btn-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; opacity: 0.7;
-  }
-
-  .proj-modal-close {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.06em;
-    background: none; border: 1px solid var(--border2, rgba(255,255,255,0.1));
-    color: var(--text2); border-radius: 20px;
-    padding: 6px 18px; cursor: pointer;
-    transition: all 0.2s;
-  }
-  .proj-modal-close:hover { border-color: var(--accent); color: var(--accent); }
-
-  @media (max-width: 480px) {
-    .proj-modal-box { padding: 1.5rem 1.25rem; }
-    .proj-modal-title { font-size: 16px; }
-  }
-</style>
-
-<!-- SHADOW HAND MODAL -->
-<div class="proj-modal" id="modal-shadowhand" onclick="handleModalBgClick(event,'modal-shadowhand')">
+<!-- TONY MODAL -->
+<div class="proj-modal" id="modal-tony" onclick="handleModalBgClick(event,'modal-tony')">
   <div class="proj-modal-box">
-    <div class="proj-modal-icon">🦾</div>
-    <div class="proj-modal-title">Shadow Hand Reward Hacking Visualiser</div>
+    <div class="proj-modal-icon">🤖</div>
+    <div class="proj-modal-title">Tony — Local AI Assistant</div>
     <div class="proj-modal-sub">Where would you like to go?</div>
     <div class="proj-modal-btns">
-      <a href="reward_hacking_visualiser.html"
-         onclick="gtag('event','click',{event_category:'Modal',event_label:'Shadow Visualiser'})"
+      <a href="https://github.com/br23aay/tony" target="_blank"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'Tony GitHub'})"
          class="proj-modal-btn btn-cyan">
-        <span class="proj-modal-btn-icon">📊</span>
-        <div>
-          <div class="proj-modal-btn-label">Live Dashboard</div>
-          <div class="proj-modal-btn-sub">Interactive reward hacking visualiser — 7 charts</div>
-        </div>
-      </a>
-      <a href="https://github.com/br23aay/shadowhand-dexterity-ppo" target="_blank"
-         onclick="gtag('event','click',{event_category:'Modal',event_label:'Shadow GitHub'})"
-         class="proj-modal-btn btn-purple">
         <span class="proj-modal-btn-icon">⌥</span>
         <div>
           <div class="proj-modal-btn-label">View Code on GitHub</div>
-          <div class="proj-modal-btn-sub">github.com/br23aay/shadowhand-dexterity-ppo</div>
+          <div class="proj-modal-btn-sub">github.com/br23aay/tony · Python + Flask + Ollama</div>
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-shadowhand')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('modal-tony')">✕ Close</button>
   </div>
 </div>
 
-<!-- LLM MODAL -->
-<div class="proj-modal" id="modal-llm" onclick="handleModalBgClick(event,'modal-llm')">
+<!-- CAREEROS MODAL -->
+<div class="proj-modal" id="modal-careeros" onclick="handleModalBgClick(event,'modal-careeros')">
   <div class="proj-modal-box">
-    <div class="proj-modal-icon">🔍</div>
-    <div class="proj-modal-title">LLM Evaluation Workflows</div>
+    <div class="proj-modal-icon">🎯</div>
+    <div class="proj-modal-title">CareerOS — AI Career OS</div>
     <div class="proj-modal-sub">Where would you like to go?</div>
     <div class="proj-modal-btns">
-      <a href="llm_eval_report.html"
-         onclick="gtag('event','click',{event_category:'Modal',event_label:'LLM Report'})"
+      <a href="https://github.com/br23aay/CareerOS" target="_blank"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'CareerOS GitHub'})"
          class="proj-modal-btn btn-cyan">
-        <span class="proj-modal-btn-icon">📋</span>
-        <div>
-          <div class="proj-modal-btn-label">View Results Report</div>
-          <div class="proj-modal-btn-sub">Interactive evaluation report · 20 outputs · 0.847 avg score</div>
-        </div>
-      </a>
-      <a href="https://github.com/br23aay/llm-evaluation-workflows" target="_blank"
-         onclick="gtag('event','click',{event_category:'Modal',event_label:'LLM GitHub'})"
-         class="proj-modal-btn btn-purple">
         <span class="proj-modal-btn-icon">⌥</span>
         <div>
           <div class="proj-modal-btn-label">View Code on GitHub</div>
-          <div class="proj-modal-btn-sub">github.com/br23aay/llm-evaluation-workflows</div>
+          <div class="proj-modal-btn-sub">github.com/br23aay/CareerOS · 13 departments · Python</div>
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-llm')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('modal-careeros')">✕ Close</button>
   </div>
 </div>
 
@@ -1676,65 +1625,65 @@
   </div>
 </div>
 
-<script>
-  // ── MODAL FUNCTIONS ──────────────────────────────────────────────────────
-  function openModal(id) {
-    const el = document.getElementById('modal-' + id);
-    el.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    gtag('event','modal_open',{event_category:'Projects',event_label:id});
-  }
+<!-- SHADOW HAND MODAL -->
+<div class="proj-modal" id="modal-shadowhand" onclick="handleModalBgClick(event,'modal-shadowhand')">
+  <div class="proj-modal-box">
+    <div class="proj-modal-icon">📊</div>
+    <div class="proj-modal-title">Shadow Hand Reward Hacking Visualiser</div>
+    <div class="proj-modal-sub">Where would you like to go?</div>
+    <div class="proj-modal-btns">
+      <a href="reward_hacking_visualiser.html"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'Shadow Visualiser'})"
+         class="proj-modal-btn btn-cyan">
+        <span class="proj-modal-btn-icon">📊</span>
+        <div>
+          <div class="proj-modal-btn-label">Live Dashboard</div>
+          <div class="proj-modal-btn-sub">Interactive reward hacking visualiser — 7 charts</div>
+        </div>
+      </a>
+      <a href="https://github.com/br23aay/shadowhand-dexterity-ppo" target="_blank"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'Shadow GitHub'})"
+         class="proj-modal-btn btn-purple">
+        <span class="proj-modal-btn-icon">⌥</span>
+        <div>
+          <div class="proj-modal-btn-label">View Code on GitHub</div>
+          <div class="proj-modal-btn-sub">github.com/br23aay/shadowhand-dexterity-ppo</div>
+        </div>
+      </a>
+    </div>
+    <button class="proj-modal-close" onclick="closeModal('modal-shadowhand')">✕ Close</button>
+  </div>
+</div>
 
-  // Accept both 'shadowhand' and 'modal-shadowhand' — strips prefix if present
-  function closeModal(id) {
-    const cleanId = id.startsWith('modal-') ? id : 'modal-' + id;
-    const el = document.getElementById(cleanId);
-    if (el) { el.classList.remove('open'); }
-    document.body.style.overflow = '';
-  }
-
-  function handleModalBgClick(e, id) {
-    const cleanId = id.startsWith('modal-') ? id : 'modal-' + id;
-    if (e.target === document.getElementById(cleanId)) closeModal(id);
-  }
-
-  // Escape key closes any open modal
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.proj-modal.open').forEach(m => {
-        m.classList.remove('open');
-      });
-      document.body.style.overflow = '';
-    }
-  });
-
-  // ── MOBILE NAV ──────────────────────────────────────────────────────────
-  function toggleMobileNav() {
-    const nav = document.getElementById('mobileNav');
-    const ham = document.getElementById('hamburger');
-    const isOpen = nav.classList.contains('open');
-    if (isOpen) {
-      nav.classList.remove('open');
-      ham.classList.remove('open');
-      document.body.style.overflow = '';
-      setTimeout(() => { nav.style.display = 'none'; }, 300);
-    } else {
-      nav.style.display = 'flex';
-      setTimeout(() => nav.classList.add('open'), 10);
-      ham.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
-  function closeMobileNav() {
-    const nav = document.getElementById('mobileNav');
-    const ham = document.getElementById('hamburger');
-    nav.classList.remove('open');
-    ham.classList.remove('open');
-    document.body.style.overflow = '';
-    setTimeout(() => { nav.style.display = 'none'; }, 300);
-  }
-</script>
+<!-- LLM MODAL -->
+<div class="proj-modal" id="modal-llm" onclick="handleModalBgClick(event,'modal-llm')">
+  <div class="proj-modal-box">
+    <div class="proj-modal-icon">🔍</div>
+    <div class="proj-modal-title">LLM Evaluation Workflows</div>
+    <div class="proj-modal-sub">Where would you like to go?</div>
+    <div class="proj-modal-btns">
+      <a href="llm_eval_report.html"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'LLM Report'})"
+         class="proj-modal-btn btn-cyan">
+        <span class="proj-modal-btn-icon">📋</span>
+        <div>
+          <div class="proj-modal-btn-label">View Results Report</div>
+          <div class="proj-modal-btn-sub">Interactive evaluation report · 20 outputs · 0.847 avg</div>
+        </div>
+      </a>
+      <a href="https://github.com/br23aay/llm-evaluation-workflows" target="_blank"
+         onclick="gtag('event','click',{event_category:'Modal',event_label:'LLM GitHub'})"
+         class="proj-modal-btn btn-purple">
+        <span class="proj-modal-btn-icon">⌥</span>
+        <div>
+          <div class="proj-modal-btn-label">View Code on GitHub</div>
+          <div class="proj-modal-btn-sub">github.com/br23aay/llm-evaluation-workflows</div>
+        </div>
+      </a>
+    </div>
+    <button class="proj-modal-close" onclick="closeModal('modal-llm')">✕ Close</button>
+  </div>
+</div>
 
 <!-- SKILLS -->
 <section id="skills" class="section" style="border-top: 1px solid var(--border);">
@@ -2380,6 +2329,38 @@
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
+  });
+
+  // ── PROJECT MODALS ───────────────────────────────────────────────────────
+  function openModal(id) {
+    const modal = document.getElementById('modal-' + id);
+    if (modal) {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      gtag('event', 'modal_open', { event_category: 'Projects', event_label: id });
+    }
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById('modal-' + id);
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function handleModalBgClick(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+  }
+
+  // Close any open modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.proj-modal.open').forEach(m => {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
   });
 
 </script>
