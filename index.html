@@ -965,6 +965,23 @@
     .nav-cta { display: none; }
     .hamburger { display: flex; }
 
+    .nav-links.mobile-open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(8,12,16,0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      gap: 1.25rem;
+      z-index: 150;
+    }
+    .nav-links.mobile-open li { width: 100%; }
+    .nav-links.mobile-open a { display: block; padding: 0.5rem 0; }
+
     /* Container padding */
     .container { padding: 0 1.25rem; }
 
@@ -1510,7 +1527,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-tony')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('tony')">✕ Close</button>
   </div>
 </div>
 
@@ -1531,7 +1548,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-careeros')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('careeros')">✕ Close</button>
   </div>
 </div>
 
@@ -1561,7 +1578,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-slm')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('slm')">✕ Close</button>
   </div>
 </div>
 
@@ -1591,7 +1608,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-vision')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('vision')">✕ Close</button>
   </div>
 </div>
 
@@ -1621,7 +1638,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-paper')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('paper')">✕ Close</button>
   </div>
 </div>
 
@@ -1651,7 +1668,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-shadowhand')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('shadowhand')">✕ Close</button>
   </div>
 </div>
 
@@ -1681,7 +1698,7 @@
         </div>
       </a>
     </div>
-    <button class="proj-modal-close" onclick="closeModal('modal-llm')">✕ Close</button>
+    <button class="proj-modal-close" onclick="closeModal('llm')">✕ Close</button>
   </div>
 </div>
 
@@ -2340,6 +2357,23 @@
       gtag('event', 'modal_open', { event_category: 'Projects', event_label: id });
     }
   }
+
+  function toggleMobileNav() {
+    const links = document.querySelector('.nav-links');
+    const btn = document.getElementById('hamburger');
+    const isOpen = links.classList.toggle('mobile-open');
+    btn.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  // Close the mobile menu whenever a nav link is clicked
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.remove('mobile-open');
+      document.getElementById('hamburger').classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
 
   function closeModal(id) {
     const modal = document.getElementById('modal-' + id);
