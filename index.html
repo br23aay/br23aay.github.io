@@ -2384,7 +2384,7 @@
   }
 
   function handleModalBgClick(e, id) {
-    if (e.target === document.getElementById(id)) closeModal(id);
+    if (e.target === document.getElementById(id)) closeModal(id.replace(/^modal-/, ''));
   }
 
   // Close any open modal on Escape key
